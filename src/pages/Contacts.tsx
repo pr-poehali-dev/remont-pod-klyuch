@@ -46,8 +46,8 @@ const Contacts = () => {
     {
       icon: 'Phone',
       title: 'Телефон',
-      value: '+7 (999) 999-99-99',
-      link: 'tel:+79999999999',
+      value: '+7 (937) 076-86-80',
+      link: 'tel:+79370768680',
       description: 'Звоните с 9:00 до 21:00',
     },
     {
@@ -278,9 +278,12 @@ const Contacts = () => {
               size="lg"
               variant="secondary"
               className="bg-white text-primary hover:bg-white/90 text-lg px-8"
+              asChild
             >
-              <Icon name="Phone" className="mr-2" />
-              +7 (999) 999-99-99
+              <a href="tel:+79370768680">
+                <Icon name="Phone" className="mr-2" />
+                +7 (937) 076-86-80
+              </a>
             </Button>
             <Button
               size="lg"

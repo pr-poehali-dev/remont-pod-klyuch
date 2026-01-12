@@ -40,9 +40,9 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <a href="tel:+79999999999" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
+            <a href="tel:+79370768680" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
               <Icon name="Phone" size={20} />
-              <span className="font-semibold">+7 (999) 999-99-99</span>
+              <span className="font-semibold">+7 (937) 076-86-80</span>
             </a>
             <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
               Консультация
@@ -72,11 +72,11 @@ const Header = () => {
                 </Link>
               ))}
               <a
-                href="tel:+79999999999"
+                href="tel:+79370768680"
                 className="flex items-center gap-2 text-foreground hover:text-primary transition-colors py-2"
               >
                 <Icon name="Phone" size={20} />
-                <span className="font-semibold">+7 (999) 999-99-99</span>
+                <span className="font-semibold">+7 (937) 076-86-80</span>
               </a>
               <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 w-full">
                 Консультация
