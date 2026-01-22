@@ -14,7 +14,7 @@ const Footer = () => {
                 <Icon name="TrendingUp" className="text-white" size={20} />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">Бизнес-Прогнозатор</span>
+                <span className="font-bold text-lg">План А</span>
                 <span className="text-xs text-muted-foreground">Ваше будущее в цифрах</span>
               </div>
             </div>
@@ -97,7 +97,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© {currentYear} Бизнес-Прогнозатор. Все права защищены.</p>
+          <p>© {currentYear} План А. Все права защищены.</p>
         </div>
       </div>
     </footer>

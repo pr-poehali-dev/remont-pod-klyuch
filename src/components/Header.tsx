@@ -22,7 +22,7 @@ const Header = () => {
               <Icon name="TrendingUp" className="text-white" size={24} />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl text-foreground">Бизнес-Прогнозатор</span>
+              <span className="font-bold text-xl text-foreground">План А</span>
               <span className="text-xs text-muted-foreground">Ваше будущее в цифрах</span>
             </div>
           </Link>
