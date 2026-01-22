@@ -2,6 +2,7 @@ import json
 import os
 import base64
 import boto3
+import requests
 from datetime import datetime
 
 def handler(event: dict, context) -> dict:
@@ -76,6 +77,21 @@ def handler(event: dict, context) -> dict:
         
         cdn_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{s3_key}"
         
+        ocr_data = None
+        if extension in ['jpg', 'jpeg', 'png', 'pdf']:
+            try:
+                ocr_response = requests.post(
+                    'https://functions.poehali.dev/c0e33330-1f53-405f-9e4a-081015ff0924',
+                    json={'imageContent': file_content_base64},
+                    timeout=30
+                )
+                if ocr_response.status_code == 200:
+                    ocr_result = ocr_response.json()
+                    if ocr_result.get('success'):
+                        ocr_data = ocr_result.get('extractedData')
+            except Exception:
+                pass
+        
         return {
             'statusCode': 200,
             'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
@@ -84,7 +100,8 @@ def handler(event: dict, context) -> dict:
                 'fileUrl': cdn_url,
                 'fileName': file_name,
                 'fileType': file_type,
-                'uploadedAt': datetime.now().isoformat()
+                'uploadedAt': datetime.now().isoformat(),
+                'ocrData': ocr_data
             })
         }
         

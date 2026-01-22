@@ -9,14 +9,64 @@ import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 
+interface OcrData {
+  amounts?: number[];
+  dates?: string[];
+  documentNumber?: string | null;
+  documentType?: string | null;
+  inn?: string | null;
+  totalAmount?: number | null;
+}
+
 const Accounting = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [ocrData, setOcrData] = useState<OcrData | null>(null);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      toast.success(`Документ "${file.name}" загружен`);
+    if (!file) return;
+
+    setSelectedFile(file);
+    setIsUploading(true);
+    setOcrData(null);
+
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(',')[1];
+        
+        const response = await fetch('https://functions.poehali.dev/11401ef2-fb3f-4ea6-80f5-f92df257be5b', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: file.name,
+            fileContent: base64,
+            fileType: 'invoice'
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          toast.success(`Документ "${file.name}" загружен`);
+          
+          if (result.ocrData) {
+            setOcrData(result.ocrData);
+            toast.success('Данные распознаны автоматически!', {
+              description: `Найдена сумма: ${result.ocrData.totalAmount || 'не определена'} ₽`
+            });
+          }
+        } else {
+          toast.error('Ошибка при загрузке документа');
+        }
+      };
+      
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast.error('Ошибка при обработке файла');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -115,16 +165,21 @@ const Accounting = () => {
                       className="hidden"
                       accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
                       onChange={handleFileUpload}
+                      disabled={isUploading}
                     />
                     <label htmlFor="file-upload" className="cursor-pointer">
-                      <Icon name="Upload" size={48} className="mx-auto text-muted-foreground mb-4" />
+                      {isUploading ? (
+                        <Icon name="Loader2" size={48} className="mx-auto text-primary mb-4 animate-spin" />
+                      ) : (
+                        <Icon name="Upload" size={48} className="mx-auto text-muted-foreground mb-4" />
+                      )}
                       <p className="text-lg font-semibold mb-2">
-                        Перетащите файлы или нажмите для выбора
+                        {isUploading ? 'Загрузка и распознавание...' : 'Перетащите файлы или нажмите для выбора'}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Поддерживаются форматы: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG
+                        {isUploading ? 'Автоматическое извлечение сумм и дат' : 'Поддерживаются форматы: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG'}
                       </p>
-                      {selectedFile && (
+                      {selectedFile && !isUploading && (
                         <Badge className="mt-4" variant="secondary">
                           <Icon name="Check" size={14} className="mr-1" />
                           {selectedFile.name}
@@ -132,6 +187,47 @@ const Accounting = () => {
                       )}
                     </label>
                   </div>
+                  
+                  {ocrData && (
+                    <div className="mt-6 p-6 bg-accent/10 rounded-lg border border-accent/20">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Icon name="Sparkles" size={20} className="text-accent" />
+                        <h3 className="font-semibold">Распознанные данные</h3>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {ocrData.documentType && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">Тип документа</p>
+                            <p className="font-semibold">{ocrData.documentType}</p>
+                          </div>
+                        )}
+                        {ocrData.documentNumber && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">Номер документа</p>
+                            <p className="font-semibold">№{ocrData.documentNumber}</p>
+                          </div>
+                        )}
+                        {ocrData.totalAmount && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">Сумма</p>
+                            <p className="font-semibold text-2xl text-accent">{ocrData.totalAmount.toLocaleString('ru-RU')} ₽</p>
+                          </div>
+                        )}
+                        {ocrData.dates && ocrData.dates.length > 0 && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">Даты</p>
+                            <p className="font-semibold">{ocrData.dates[0]}</p>
+                          </div>
+                        )}
+                        {ocrData.inn && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">ИНН</p>
+                            <p className="font-semibold">{ocrData.inn}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
