@@ -47,25 +47,41 @@ const Pricing = () => {
         { text: 'Экспорт в PDF', included: false },
         { text: 'Анализ рисков', included: false },
         { text: 'Рекомендации', included: false },
-        { text: 'Сценарное моделирование', included: false },
-        { text: 'Поддержка 24/7', included: false },
       ],
       cta: 'Попробовать',
       ctaLink: '/calculator',
       variant: 'outline' as const
     },
     {
-      name: 'Профессиональный',
+      name: 'Стандарт',
+      price: '999',
+      period: 'разовая оплата',
+      description: 'Для малого бизнеса и ИП',
+      badge: null,
+      features: [
+        { text: 'Прогноз до 6 месяцев', included: true },
+        { text: 'Расширенная аналитика', included: true },
+        { text: 'Экспорт в PDF', included: true },
+        { text: 'Базовый анализ рисков', included: true },
+        { text: 'Базовые рекомендации', included: true },
+      ],
+      cta: 'Оплатить',
+      ctaLink: null,
+      variant: 'outline' as const,
+      isPaid: true
+    },
+    {
+      name: 'Премиум',
       price: '1 499',
       period: 'разовая оплата',
       description: 'Для растущего бизнеса и стартапов',
       badge: 'Популярный',
       features: [
         { text: 'Прогноз до 1 года', included: true },
-        { text: 'Расширенная аналитика', included: true },
+        { text: 'Полная аналитика', included: true },
         { text: 'Экспорт в PDF и Excel', included: true },
         { text: 'Анализ рисков', included: true },
-        { text: 'Базовые рекомендации', included: true },
+        { text: 'Персональные рекомендации', included: true },
         { text: 'До 3 сценариев', included: true },
       ],
       cta: 'Оплатить',
@@ -84,12 +100,30 @@ const Pricing = () => {
         { text: 'Полная аналитика + AI', included: true },
         { text: 'Экспорт во все форматы', included: true },
         { text: 'Глубокий анализ рисков', included: true },
-        { text: 'Персональные рекомендации', included: true },
+        { text: 'Детальные рекомендации', included: true },
+        { text: 'Неограниченные сценарии', included: true },
       ],
       cta: 'Оплатить',
       ctaLink: null,
       variant: 'default' as const,
       isPaid: true
+    },
+    {
+      name: 'Индивидуальный',
+      price: 'По запросу',
+      period: 'индивидуально',
+      description: 'Для уникальных требований и проектов',
+      badge: null,
+      features: [
+        { text: 'Персональная настройка прогнозов', included: true },
+        { text: 'Кастомные модели аналитики', included: true },
+        { text: 'Интеграция с вашими системами', included: true },
+        { text: 'Личный менеджер проекта', included: true },
+        { text: 'Консультации экспертов', included: true },
+      ],
+      cta: 'Обсудить проект',
+      ctaLink: '/contacts',
+      variant: 'outline' as const
     }
   ];
 
@@ -142,7 +176,7 @@ const Pricing = () => {
             <h2 className="text-2xl font-bold text-muted-foreground">Тарифы для действующего бизнеса</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto">
             {plans.map((plan, index) => (
               <Card 
                 key={index} 
