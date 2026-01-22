@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,13 @@ const Pricing = () => {
       navigate('/forecast-form');
     }, 1000);
   };
+
+  const sbpPaymentUrl = useMemo(() => {
+    if (!selectedPlan) return '';
+    const amount = selectedPlan.price.replace(/\s/g, '');
+    const phone = '79277486868';
+    return `https://qr.nspk.ru/AS10003TMQCB68M0AJDV90NP9EMCR04C?type=01&bank=100000000111&sum=${amount}00&cur=RUB&payeeId=${phone}&lastName=Сбербанк&crc=9F55`;
+  }, [selectedPlan]);
   const plans = [
     {
       name: 'Базовый',
@@ -243,12 +251,15 @@ const Pricing = () => {
 
             <div className="bg-secondary/20 p-6 rounded-lg space-y-4">
               <div className="flex justify-center">
-                <div className="w-64 h-64 bg-white p-4 rounded-lg">
-                  <img 
-                    src={`https://qr.nspk.ru/proxyapp/apiQR/c2m/api/v1/create?redirectUrl=https://qr.nspk.ru/AS10003TMQCB68M0AJDV90NP9EMCR04C?type=01&bank=100000000111&sum=${selectedPlan?.price.replace(/\s/g, '')}00&cur=RUB&payeeId=79277486868&lastName=Сбербанк&crc=9F55`}
-                    alt="QR код для оплаты"
-                    className="w-full h-full"
-                  />
+                <div className="w-64 h-64 bg-white p-4 rounded-lg flex items-center justify-center">
+                  {sbpPaymentUrl && (
+                    <QRCodeSVG 
+                      value={sbpPaymentUrl}
+                      size={224}
+                      level="M"
+                      includeMargin={false}
+                    />
+                  )}
                 </div>
               </div>
               <div className="text-center space-y-2">
