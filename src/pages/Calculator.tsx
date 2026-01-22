@@ -41,11 +41,20 @@ const Calculator = () => {
   const [competition, setCompetition] = useState([50]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState('email');
+  const [messenger, setMessenger] = useState('');
   const [forecast, setForecast] = useState<ForecastResult | null>(null);
 
   const calculateForecast = () => {
-    if (!name || !email) {
-      toast.error('Заполните все поля');
+    if (!name || !email || !phone || !company) {
+      toast.error('Заполните все обязательные поля');
+      return;
+    }
+    
+    if (deliveryMethod === 'messenger' && !messenger) {
+      toast.error('Укажите контакт в мессенджере');
       return;
     }
 
@@ -280,6 +289,14 @@ const Calculator = () => {
               setName={setName}
               email={email}
               setEmail={setEmail}
+              phone={phone}
+              setPhone={setPhone}
+              company={company}
+              setCompany={setCompany}
+              deliveryMethod={deliveryMethod}
+              setDeliveryMethod={setDeliveryMethod}
+              messenger={messenger}
+              setMessenger={setMessenger}
               onCalculate={calculateForecast}
             />
 

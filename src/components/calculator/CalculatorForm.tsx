@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 
 interface CalculatorFormProps {
@@ -24,6 +26,14 @@ interface CalculatorFormProps {
   setName: (value: string) => void;
   email: string;
   setEmail: (value: string) => void;
+  phone: string;
+  setPhone: (value: string) => void;
+  company: string;
+  setCompany: (value: string) => void;
+  deliveryMethod: string;
+  setDeliveryMethod: (value: string) => void;
+  messenger: string;
+  setMessenger: (value: string) => void;
   onCalculate: () => void;
 }
 
@@ -44,6 +54,14 @@ const CalculatorForm = ({
   setName,
   email,
   setEmail,
+  phone,
+  setPhone,
+  company,
+  setCompany,
+  deliveryMethod,
+  setDeliveryMethod,
+  messenger,
+  setMessenger,
   onCalculate
 }: CalculatorFormProps) => {
   return (
@@ -269,32 +287,111 @@ const CalculatorForm = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Ваше имя</Label>
-            <Input
-              id="name"
-              placeholder="Иван Иванов"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="ivan@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+            <Icon name="FileText" size={20} />
+            Контактная информация
+          </h3>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">ФИО контактного лица <span className="text-red-500">*</span></Label>
+                <Input
+                  id="name"
+                  placeholder="Иванов Иван Иванович"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="company">Название компании <span className="text-red-500">*</span></Label>
+                <Input
+                  id="company"
+                  placeholder="ООО &quot;Рога и копыта&quot;"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="ivan@company.ru"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Телефон <span className="text-red-500">*</span></Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="+7 (999) 123-45-67"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Как удобнее получить результат? <span className="text-red-500">*</span></Label>
+              <RadioGroup value={deliveryMethod} onValueChange={setDeliveryMethod}>
+                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-secondary/50 transition-colors">
+                  <RadioGroupItem value="email" id="email-delivery" />
+                  <Label htmlFor="email-delivery" className="cursor-pointer flex items-center gap-2 flex-1">
+                    <Icon name="Mail" size={18} className="text-primary" />
+                    <div>
+                      <p className="font-medium">Email</p>
+                      <p className="text-sm text-muted-foreground">Отправим PDF-отчёт на вашу почту</p>
+                    </div>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-secondary/50 transition-colors">
+                  <RadioGroupItem value="messenger" id="messenger-delivery" />
+                  <Label htmlFor="messenger-delivery" className="cursor-pointer flex items-center gap-2 flex-1">
+                    <Icon name="MessageCircle" size={18} className="text-primary" />
+                    <div>
+                      <p className="font-medium">Мессенджер</p>
+                      <p className="text-sm text-muted-foreground">Telegram, WhatsApp или другой</p>
+                    </div>
+                  </Label>
+                </div>
+              </RadioGroup>
+
+              {deliveryMethod === 'messenger' && (
+                <div className="space-y-2 animate-fade-in pl-4">
+                  <Label htmlFor="messenger">Укажите ваш контакт в мессенджере <span className="text-red-500">*</span></Label>
+                  <Input
+                    id="messenger"
+                    placeholder="@username или +7 (999) 123-45-67"
+                    value={messenger}
+                    onChange={(e) => setMessenger(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Укажите никнейм в Telegram (@username) или номер телефона для WhatsApp
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         <Button onClick={onCalculate} size="lg" className="w-full text-lg">
           <Icon name="Calculator" className="mr-2" size={20} />
-          Рассчитать прогноз с анализом рисков
+          Рассчитать прогноз и отправить результат
         </Button>
+        
+        <p className="text-xs text-center text-muted-foreground">
+          Нажимая кнопку, вы соглашаетесь на обработку персональных данных
+        </p>
       </CardContent>
     </Card>
   );
