@@ -112,7 +112,7 @@ const Contacts = () => {
                     </Button>
                     <Button variant="outline" size="lg" className="flex-1">
                       <Icon name="MessageCircle" className="mr-2" />
-                      WhatsApp
+                      MAX
                     </Button>
                   </div>
                 </CardContent>
