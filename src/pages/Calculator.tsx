@@ -7,17 +7,37 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
+
+interface RiskAssessment {
+  overall: number;
+  categories: {
+    name: string;
+    level: number;
+    description: string;
+    icon: string;
+  }[];
+}
+
+interface ForecastResult {
+  optimistic: { month: number; year: number; fiveYears: number };
+  base: { month: number; year: number; fiveYears: number };
+  pessimistic: { month: number; year: number; fiveYears: number };
+  risks: RiskAssessment;
+}
 
 const Calculator = () => {
   const [currentRevenue, setCurrentRevenue] = useState([1000000]);
   const [growthRate, setGrowthRate] = useState([10]);
   const [industry, setIndustry] = useState('retail');
   const [employees, setEmployees] = useState([10]);
+  const [marketVolatility, setMarketVolatility] = useState([50]);
+  const [competition, setCompetition] = useState([50]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [forecast, setForecast] = useState<{month: number, year: number, fiveYears: number} | null>(null);
+  const [forecast, setForecast] = useState<ForecastResult | null>(null);
 
   const calculateForecast = () => {
     if (!name || !email) {
@@ -36,20 +56,93 @@ const Calculator = () => {
       'finance': 1.2,
     };
 
+    const industryRisks: Record<string, number> = {
+      'retail': 60,
+      'tech': 45,
+      'manufacturing': 55,
+      'services': 50,
+      'finance': 40,
+    };
+
     const multiplier = industryMultipliers[industry] || 1.0;
     const employeeBonus = Math.min(employees[0] / 100, 0.2);
 
-    const monthForecast = Math.round(base * (1 + (growth * multiplier / 12)));
-    const yearForecast = Math.round(base * Math.pow(1 + (growth * multiplier), 1));
-    const fiveYearForecast = Math.round(base * Math.pow(1 + (growth * multiplier * (1 + employeeBonus)), 5));
+    const volatilityRisk = marketVolatility[0];
+    const competitionRisk = competition[0];
+    const industryRisk = industryRisks[industry] || 50;
+    const scaleRisk = Math.max(30, 70 - (employees[0] / 10));
+
+    const overallRisk = Math.round((volatilityRisk + competitionRisk + industryRisk + scaleRisk) / 4);
+
+    const riskFactor = 1 - (overallRisk / 200);
+
+    const baseMonth = Math.round(base * (1 + (growth * multiplier / 12)));
+    const baseYear = Math.round(base * Math.pow(1 + (growth * multiplier), 1));
+    const baseFiveYears = Math.round(base * Math.pow(1 + (growth * multiplier * (1 + employeeBonus)), 5));
+
+    const optimisticMultiplier = 1.3;
+    const pessimisticMultiplier = 0.7 * riskFactor;
 
     setForecast({
-      month: monthForecast,
-      year: yearForecast,
-      fiveYears: fiveYearForecast
+      optimistic: {
+        month: Math.round(baseMonth * optimisticMultiplier),
+        year: Math.round(baseYear * optimisticMultiplier),
+        fiveYears: Math.round(baseFiveYears * optimisticMultiplier)
+      },
+      base: {
+        month: baseMonth,
+        year: baseYear,
+        fiveYears: baseFiveYears
+      },
+      pessimistic: {
+        month: Math.round(baseMonth * pessimisticMultiplier),
+        year: Math.round(baseYear * pessimisticMultiplier),
+        fiveYears: Math.round(baseFiveYears * pessimisticMultiplier)
+      },
+      risks: {
+        overall: overallRisk,
+        categories: [
+          {
+            name: 'Волатильность рынка',
+            level: volatilityRisk,
+            description: volatilityRisk > 70 ? 'Высокая нестабильность' : volatilityRisk > 40 ? 'Умеренные колебания' : 'Стабильный рынок',
+            icon: 'TrendingUp'
+          },
+          {
+            name: 'Конкуренция',
+            level: competitionRisk,
+            description: competitionRisk > 70 ? 'Высокая конкуренция' : competitionRisk > 40 ? 'Средний уровень' : 'Низкая конкуренция',
+            icon: 'Users'
+          },
+          {
+            name: 'Отраслевые риски',
+            level: industryRisk,
+            description: industryRisk > 60 ? 'Требует внимания' : industryRisk > 40 ? 'Умеренные' : 'Низкие риски',
+            icon: 'Building'
+          },
+          {
+            name: 'Масштаб бизнеса',
+            level: scaleRisk,
+            description: employees[0] < 10 ? 'Малый бизнес - высокий риск' : employees[0] < 50 ? 'Средний бизнес' : 'Крупный бизнес - низкий риск',
+            icon: 'Scale'
+          }
+        ]
+      }
     });
 
-    toast.success('Прогноз рассчитан!');
+    toast.success('Прогноз с анализом рисков готов!');
+  };
+
+  const getRiskColor = (level: number) => {
+    if (level > 70) return 'text-red-500';
+    if (level > 40) return 'text-yellow-500';
+    return 'text-green-500';
+  };
+
+  const getRiskBgColor = (level: number) => {
+    if (level > 70) return 'bg-red-500';
+    if (level > 40) return 'bg-yellow-500';
+    return 'bg-green-500';
   };
 
   return (
@@ -58,11 +151,11 @@ const Calculator = () => {
       
       <main className="pt-32 pb-20">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-6xl mx-auto space-y-8">
             <div className="text-center space-y-4">
               <h1 className="text-4xl md:text-5xl font-bold">Калькулятор прогнозов</h1>
               <p className="text-xl text-muted-foreground">
-                Получите прогноз развития вашего бизнеса на разные периоды
+                Получите прогноз с анализом рисков и сценариями развития
               </p>
             </div>
 
@@ -71,62 +164,105 @@ const Calculator = () => {
                 <CardTitle className="text-2xl">Параметры бизнеса</CardTitle>
               </CardHeader>
               <CardContent className="space-y-8">
-                <div className="space-y-4">
-                  <Label className="text-base font-semibold">
-                    Текущая месячная выручка: {currentRevenue[0].toLocaleString('ru-RU')} ₽
-                  </Label>
-                  <Slider
-                    value={currentRevenue}
-                    onValueChange={setCurrentRevenue}
-                    min={100000}
-                    max={10000000}
-                    step={100000}
-                    className="w-full"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <Label className="text-base font-semibold">
+                      Текущая месячная выручка: {currentRevenue[0].toLocaleString('ru-RU')} ₽
+                    </Label>
+                    <Slider
+                      value={currentRevenue}
+                      onValueChange={setCurrentRevenue}
+                      min={100000}
+                      max={10000000}
+                      step={100000}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-base font-semibold">
+                      Ожидаемый темп роста: {growthRate[0]}% в год
+                    </Label>
+                    <Slider
+                      value={growthRate}
+                      onValueChange={setGrowthRate}
+                      min={-20}
+                      max={100}
+                      step={5}
+                      className="w-full"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-4">
-                  <Label className="text-base font-semibold">
-                    Ожидаемый темп роста: {growthRate[0]}% в год
-                  </Label>
-                  <Slider
-                    value={growthRate}
-                    onValueChange={setGrowthRate}
-                    min={-20}
-                    max={100}
-                    step={5}
-                    className="w-full"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <Label htmlFor="industry" className="text-base font-semibold">Отрасль</Label>
+                    <Select value={industry} onValueChange={setIndustry}>
+                      <SelectTrigger id="industry">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="retail">Розничная торговля</SelectItem>
+                        <SelectItem value="tech">IT и технологии</SelectItem>
+                        <SelectItem value="manufacturing">Производство</SelectItem>
+                        <SelectItem value="services">Услуги</SelectItem>
+                        <SelectItem value="finance">Финансы</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-base font-semibold">
+                      Количество сотрудников: {employees[0]}
+                    </Label>
+                    <Slider
+                      value={employees}
+                      onValueChange={setEmployees}
+                      min={1}
+                      max={500}
+                      step={1}
+                      className="w-full"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="industry" className="text-base font-semibold">Отрасль</Label>
-                  <Select value={industry} onValueChange={setIndustry}>
-                    <SelectTrigger id="industry">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="retail">Розничная торговля</SelectItem>
-                      <SelectItem value="tech">IT и технологии</SelectItem>
-                      <SelectItem value="manufacturing">Производство</SelectItem>
-                      <SelectItem value="services">Услуги</SelectItem>
-                      <SelectItem value="finance">Финансы</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold mb-6">Параметры для оценки рисков</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <Label className="text-base font-semibold">
+                        Волатильность рынка: {marketVolatility[0]}%
+                      </Label>
+                      <Slider
+                        value={marketVolatility}
+                        onValueChange={setMarketVolatility}
+                        min={0}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Насколько нестабилен ваш рынок
+                      </p>
+                    </div>
 
-                <div className="space-y-4">
-                  <Label className="text-base font-semibold">
-                    Количество сотрудников: {employees[0]}
-                  </Label>
-                  <Slider
-                    value={employees}
-                    onValueChange={setEmployees}
-                    min={1}
-                    max={500}
-                    step={1}
-                    className="w-full"
-                  />
+                    <div className="space-y-4">
+                      <Label className="text-base font-semibold">
+                        Уровень конкуренции: {competition[0]}%
+                      </Label>
+                      <Slider
+                        value={competition}
+                        onValueChange={setCompetition}
+                        min={0}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Насколько конкурентна ваша ниша
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,58 +289,163 @@ const Calculator = () => {
 
                 <Button onClick={calculateForecast} size="lg" className="w-full text-lg">
                   <Icon name="Calculator" className="mr-2" size={20} />
-                  Рассчитать прогноз
+                  Рассчитать прогноз с анализом рисков
                 </Button>
               </CardContent>
             </Card>
 
             {forecast && (
-              <Card className="border-2 border-primary animate-fade-in">
-                <CardHeader>
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <Icon name="TrendingUp" className="text-primary" />
-                    Результаты прогноза
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="space-y-2 p-6 bg-primary/5 rounded-lg">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Icon name="Calendar" size={20} />
-                        <span className="font-medium">Через 1 месяц</span>
+              <>
+                <Card className="border-2 border-red-500/50 animate-fade-in">
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <Icon name="ShieldAlert" className="text-red-500" />
+                      Анализ рисков
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between p-6 bg-secondary/20 rounded-lg">
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-2">Общий уровень риска</p>
+                        <p className={`text-4xl font-bold ${getRiskColor(forecast.risks.overall)}`}>
+                          {forecast.risks.overall}%
+                        </p>
                       </div>
-                      <p className="text-3xl font-bold text-primary">
-                        {forecast.month.toLocaleString('ru-RU')} ₽
+                      <div className="w-24 h-24 rounded-full border-8 flex items-center justify-center"
+                        style={{ borderColor: forecast.risks.overall > 70 ? '#ef4444' : forecast.risks.overall > 40 ? '#eab308' : '#22c55e' }}>
+                        <Icon name="AlertTriangle" size={32} className={getRiskColor(forecast.risks.overall)} />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {forecast.risks.categories.map((risk, index) => (
+                        <div key={index} className="space-y-3 p-4 bg-secondary/10 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <Icon name={risk.icon} size={20} className="text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold">{risk.name}</p>
+                              <p className="text-sm text-muted-foreground">{risk.description}</p>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex justify-between text-sm">
+                              <span>Уровень риска</span>
+                              <span className={`font-semibold ${getRiskColor(risk.level)}`}>{risk.level}%</span>
+                            </div>
+                            <Progress value={risk.level} className="h-2" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-2 border-primary animate-fade-in">
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <Icon name="GitBranch" className="text-primary" />
+                      Сценарии прогноза
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 gap-8">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Icon name="TrendingUp" className="text-green-500" size={24} />
+                          <h3 className="text-xl font-bold">Оптимистичный сценарий</h3>
+                          <span className="text-sm text-muted-foreground ml-auto">+30% к базовому</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="p-4 bg-green-500/5 rounded-lg border border-green-500/20">
+                            <p className="text-sm text-muted-foreground mb-1">1 месяц</p>
+                            <p className="text-2xl font-bold text-green-600">
+                              {forecast.optimistic.month.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                          <div className="p-4 bg-green-500/5 rounded-lg border border-green-500/20">
+                            <p className="text-sm text-muted-foreground mb-1">1 год</p>
+                            <p className="text-2xl font-bold text-green-600">
+                              {forecast.optimistic.year.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                          <div className="p-4 bg-green-500/5 rounded-lg border border-green-500/20">
+                            <p className="text-sm text-muted-foreground mb-1">5 лет</p>
+                            <p className="text-2xl font-bold text-green-600">
+                              {forecast.optimistic.fiveYears.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Icon name="Minus" className="text-primary" size={24} />
+                          <h3 className="text-xl font-bold">Базовый сценарий</h3>
+                          <span className="text-sm text-muted-foreground ml-auto">Ожидаемый результат</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                            <p className="text-sm text-muted-foreground mb-1">1 месяц</p>
+                            <p className="text-2xl font-bold text-primary">
+                              {forecast.base.month.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                          <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                            <p className="text-sm text-muted-foreground mb-1">1 год</p>
+                            <p className="text-2xl font-bold text-primary">
+                              {forecast.base.year.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                          <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                            <p className="text-sm text-muted-foreground mb-1">5 лет</p>
+                            <p className="text-2xl font-bold text-primary">
+                              {forecast.base.fiveYears.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Icon name="TrendingDown" className="text-red-500" size={24} />
+                          <h3 className="text-xl font-bold">Пессимистичный сценарий</h3>
+                          <span className="text-sm text-muted-foreground ml-auto">С учётом рисков</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="p-4 bg-red-500/5 rounded-lg border border-red-500/20">
+                            <p className="text-sm text-muted-foreground mb-1">1 месяц</p>
+                            <p className="text-2xl font-bold text-red-600">
+                              {forecast.pessimistic.month.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                          <div className="p-4 bg-red-500/5 rounded-lg border border-red-500/20">
+                            <p className="text-sm text-muted-foreground mb-1">1 год</p>
+                            <p className="text-2xl font-bold text-red-600">
+                              {forecast.pessimistic.year.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                          <div className="p-4 bg-red-500/5 rounded-lg border border-red-500/20">
+                            <p className="text-sm text-muted-foreground mb-1">5 лет</p>
+                            <p className="text-2xl font-bold text-red-600">
+                              {forecast.pessimistic.fiveYears.toLocaleString('ru-RU')} ₽
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-secondary/20 rounded-lg">
+                      <p className="text-sm text-muted-foreground">
+                        <Icon name="Info" size={16} className="inline mr-1" />
+                        Прогноз учитывает волатильность рынка, конкуренцию, отраслевые особенности и масштаб бизнеса. 
+                        Для детального анализа и персональных рекомендаций выберите платный тариф.
                       </p>
                     </div>
-                    <div className="space-y-2 p-6 bg-primary/5 rounded-lg">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Icon name="CalendarDays" size={20} />
-                        <span className="font-medium">Через 1 год</span>
-                      </div>
-                      <p className="text-3xl font-bold text-primary">
-                        {forecast.year.toLocaleString('ru-RU')} ₽
-                      </p>
-                    </div>
-                    <div className="space-y-2 p-6 bg-accent/10 rounded-lg">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Icon name="CalendarRange" size={20} />
-                        <span className="font-medium">Через 5 лет</span>
-                      </div>
-                      <p className="text-3xl font-bold text-accent">
-                        {forecast.fiveYears.toLocaleString('ru-RU')} ₽
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-6 p-4 bg-secondary/20 rounded-lg">
-                    <p className="text-sm text-muted-foreground">
-                      <Icon name="Info" size={16} className="inline mr-1" />
-                      Прогноз основан на введённых данных и отраслевых коэффициентах. 
-                      Для получения детального анализа и рекомендаций выберите подходящий тариф.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </>
             )}
           </div>
         </div>
