@@ -61,22 +61,22 @@ const CalculatorForm = ({
               <Slider
                 value={currentRevenue}
                 onValueChange={setCurrentRevenue}
-                min={100000}
-                max={10000000}
-                step={100000}
+                min={0}
+                max={100000000}
+                step={1}
                 className="flex-1"
               />
               <Input
                 type="number"
                 value={currentRevenue[0]}
                 onChange={(e) => {
-                  const val = Math.max(100000, Math.min(10000000, Number(e.target.value) || 100000));
+                  const val = Math.max(0, Math.min(100000000, Number(e.target.value) || 0));
                   setCurrentRevenue([val]);
                 }}
                 className="w-32"
-                min={100000}
-                max={10000000}
-                step={100000}
+                min={0}
+                max={100000000}
+                step={1}
               />
               <span className="text-sm text-muted-foreground">₽</span>
             </div>
@@ -90,22 +90,22 @@ const CalculatorForm = ({
               <Slider
                 value={growthRate}
                 onValueChange={setGrowthRate}
-                min={-20}
-                max={100}
-                step={5}
+                min={-100}
+                max={500}
+                step={1}
                 className="flex-1"
               />
               <Input
                 type="number"
                 value={growthRate[0]}
                 onChange={(e) => {
-                  const val = Math.max(-20, Math.min(100, Number(e.target.value) || 10));
+                  const val = Math.max(-100, Math.min(500, Number(e.target.value) || 10));
                   setGrowthRate([val]);
                 }}
                 className="w-24"
-                min={-20}
-                max={100}
-                step={5}
+                min={-100}
+                max={500}
+                step={1}
               />
               <span className="text-sm text-muted-foreground">%</span>
             </div>
@@ -213,7 +213,7 @@ const CalculatorForm = ({
                   onValueChange={setMarketVolatility}
                   min={0}
                   max={100}
-                  step={5}
+                  step={1}
                   className="flex-1"
                 />
                 <Input
@@ -226,7 +226,7 @@ const CalculatorForm = ({
                   className="w-24"
                   min={0}
                   max={100}
-                  step={5}
+                  step={1}
                 />
                 <span className="text-sm text-muted-foreground">%</span>
               </div>
@@ -245,7 +245,7 @@ const CalculatorForm = ({
                   onValueChange={setCompetition}
                   min={0}
                   max={100}
-                  step={5}
+                  step={1}
                   className="flex-1"
                 />
                 <Input
@@ -258,7 +258,7 @@ const CalculatorForm = ({
                   className="w-24"
                   min={0}
                   max={100}
-                  step={5}
+                  step={1}
                 />
                 <span className="text-sm text-muted-foreground">%</span>
               </div>
