@@ -45,6 +45,51 @@ const Index = () => {
     { title: 'Долгосрочный', period: '5 лет', icon: 'CalendarRange' }
   ];
 
+  const cases = [
+    {
+      company: 'IT-стартап "TechFlow"',
+      industry: 'Технологии',
+      result: '+340% за 2 года',
+      description: 'Точный прогноз помог привлечь инвесторов и масштабировать команду с 5 до 45 человек',
+      icon: 'Laptop'
+    },
+    {
+      company: 'Сеть кофеен "Бодрый день"',
+      industry: 'Ритейл',
+      result: '+85% выручки',
+      description: 'Сценарное моделирование выявило оптимальные точки для открытия новых заведений',
+      icon: 'Store'
+    },
+    {
+      company: 'Производство "Мебель Про"',
+      industry: 'Производство',
+      result: 'Избежали убытков 12M ₽',
+      description: 'Анализ рисков предупредил о спаде спроса, вовремя диверсифицировали продуктовую линейку',
+      icon: 'Factory'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Алексей Морозов',
+      position: 'CEO, TechFlow',
+      text: 'Бизнес-Прогнозатор показал реальные цифры развития. Благодаря точному прогнозу закрыли раунд инвестиций на 50М ₽',
+      rating: 5
+    },
+    {
+      name: 'Мария Соколова',
+      position: 'Основатель, Бодрый день',
+      text: 'Сценарии "что будет, если" спасли нас от серьёзных ошибок. Окупили подписку в первый месяц',
+      rating: 5
+    },
+    {
+      name: 'Дмитрий Волков',
+      position: 'Финдиректор, Мебель Про',
+      text: 'Впервые финансовое планирование стало понятным и прогнозируемым. Рекомендую всем предпринимателям',
+      rating: 5
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -119,6 +164,65 @@ const Index = () => {
                     </div>
                     <h3 className="text-xl font-bold">{feature.title}</h3>
                     <p className="text-muted-foreground">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-4xl font-bold">Примеры успешных прогнозов</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Реальные истории компаний, которые изменили свой бизнес с помощью точных прогнозов
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {cases.map((item, index) => (
+                <Card key={index} className="hover:shadow-xl transition-all">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center">
+                      <Icon name={item.icon} size={28} className="text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">{item.company}</h3>
+                      <p className="text-sm text-muted-foreground">{item.industry}</p>
+                    </div>
+                    <div className="bg-primary/5 rounded-lg p-4">
+                      <p className="text-2xl font-bold text-primary">{item.result}</p>
+                    </div>
+                    <p className="text-muted-foreground">{item.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-4xl font-bold">Отзывы клиентов</h2>
+              <p className="text-xl text-muted-foreground">
+                Что говорят предприниматели о Бизнес-Прогнозаторе
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="hover:shadow-lg transition-all">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex gap-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Icon key={i} name="Star" size={20} className="text-accent fill-accent" />
+                      ))}
+                    </div>
+                    <p className="text-foreground italic">"{testimonial.text}"</p>
+                    <div className="border-t pt-4">
+                      <p className="font-semibold">{testimonial.name}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.position}</p>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
