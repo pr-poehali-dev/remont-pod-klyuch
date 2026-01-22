@@ -10,32 +10,101 @@ const Index = () => {
     {
       icon: 'TrendingUp',
       title: 'Прогноз выручки и прибыли',
-      description: 'Точные прогнозы финансовых показателей на месяц, год и 5 лет на основе текущих данных'
+      description: 'Точные прогнозы финансовых показателей на месяц, год и 5 лет на основе текущих данных',
+      details: [
+        'Прогноз месячной выручки с учётом сезонности',
+        'Годовой прогноз с отраслевыми коэффициентами (0.8-1.3)',
+        'Долгосрочный прогноз на 5 лет с бонусом от масштаба команды',
+        'Три сценария: оптимистичный (+30%), базовый, пессимистичный (с учётом рисков)'
+      ],
+      example: 'При выручке 1М ₽/мес, росте 15% и отрасли IT (×1.3): через год — 1.2М ₽/мес, через 5 лет — 2.4М ₽/мес'
     },
     {
       icon: 'ShieldAlert',
       title: 'Оценка рисков',
-      description: 'Анализ потенциальных угроз и возможностей для вашего бизнеса'
+      description: 'Анализ потенциальных угроз и возможностей для вашего бизнеса',
+      details: [
+        'Волатильность рынка: 0-100% нестабильности',
+        'Уровень конкуренции: от низкой до высокой',
+        'Отраслевые риски: 30-70% в зависимости от ОКВЭД',
+        'Риск масштаба: малый бизнес (70%) → крупный (30%)'
+      ],
+      example: 'Гостиничный бизнес с волатильностью 60%, конкуренцией 70%, 5 сотрудников = общий риск 66%'
     },
     {
       icon: 'Target',
       title: 'Рекомендации по стратегии',
-      description: 'Персонализированные советы по оптимизации бизнес-процессов'
+      description: 'Персонализированные советы по оптимизации бизнес-процессов',
+      details: [
+        'Диверсификация при высокой волатильности (>70%)',
+        'Усиление УТП при высокой конкуренции (>70%)',
+        'Инвестиции в команду при <10 сотрудников',
+        'Агрессивное масштабирование при низких рисках (<30%)',
+        'Оптимизация расходов при выручке <500К ₽'
+      ],
+      example: 'Малая команда (5 чел) + низкий рост (8%) = рекомендации: "Наймите специалистов" и "Увеличьте маркетинг"'
     },
     {
       icon: 'GitBranch',
       title: 'Сценарное моделирование',
-      description: 'Проверьте "что будет, если..." перед принятием важных решений'
+      description: 'Проверьте "что будет, если..." перед принятием важных решений',
+      details: [
+        'Оптимистичный сценарий: базовый прогноз × 1.3',
+        'Базовый сценарий: реалистичный расчёт по формулам',
+        'Пессимистичный сценарий: базовый × 0.7 × (1 - риск/200)',
+        'Сравнение результатов на 1 мес, 1 год, 5 лет'
+      ],
+      example: 'Базовый прогноз 5М ₽/год → оптимистичный 6.5М, пессимистичный 2.8М (при риске 60%)'
     },
     {
-      icon: 'LineChart',
-      title: 'Анализ трендов',
-      description: 'Мониторинг рыночных тенденций и их влияние на ваш бизнес'
+      icon: 'Building',
+      title: 'Отраслевой анализ (ОКВЭД)',
+      description: 'Учёт специфики 19 отраслей российской экономики',
+      details: [
+        'Сельское хозяйство: коэфф. 0.85, риск 65%',
+        'IT и связь: коэфф. 1.3, риск 45%',
+        'Финансы: коэфф. 1.2, риск 40%',
+        'Гостиницы: коэфф. 1.1, риск 70%',
+        'Госуправление: коэфф. 0.8, риск 30%'
+      ],
+      example: 'IT-компания растёт на 30% быстрее торговли при одинаковых стартовых данных'
     },
     {
-      icon: 'Activity',
-      title: 'Аналитика в реальном времени',
-      description: 'Актуальные данные и метрики для быстрого принятия решений'
+      icon: 'Users',
+      title: 'Влияние команды на рост',
+      description: 'Расчёт бонуса от масштаба и анализ эффективности',
+      details: [
+        'Бонус к росту: до +20% при команде 100+ человек',
+        'Формула: количество_сотрудников / 100 (макс 0.2)',
+        'Риск масштаба снижается: от 70% (1-9 чел) до 30% (100+ чел)',
+        'Рекомендация "Проверьте эффективность" при 100+ чел и росте <15%'
+      ],
+      example: 'Команда 50 чел даёт +10% к долгосрочному росту, команда 150 чел даёт +20%'
+    },
+    {
+      icon: 'Calculator',
+      title: 'Формулы расчёта',
+      description: 'Прозрачная математика для каждого прогноза',
+      details: [
+        'Месяц: выручка × (1 + рост × отрасль / 12)',
+        'Год: выручка × (1 + рост × отрасль)¹',
+        '5 лет: выручка × (1 + рост × отрасль × (1 + бонус))⁵',
+        'Общий риск: (волатильность + конкуренция + отрасль + масштаб) / 4'
+      ],
+      example: '1М ₽ × (1 + 0.2×1.2)¹ = 1.24М ₽ через год для IT-компании с ростом 20%'
+    },
+    {
+      icon: 'FileText',
+      title: 'Детальный отчёт',
+      description: 'Получите полный анализ с рекомендациями на email или в мессенджер',
+      details: [
+        'PDF-отчёт с графиками и таблицами',
+        'Анализ по 4 категориям рисков',
+        'Персональные рекомендации с приоритетами',
+        'Сравнение трёх сценариев развития',
+        'Отправка на email или в Telegram/WhatsApp'
+      ],
+      example: 'Заполните форму → получите отчёт в течение 5 минут на выбранный канал связи'
     }
   ];
 
@@ -155,15 +224,42 @@ const Index = () => {
                 Комплексный инструмент для анализа и планирования развития вашего бизнеса
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
               {features.map((feature, index) => (
-                <Card key={index} className="hover:shadow-xl transition-all hover:scale-105">
-                  <CardContent className="p-6 space-y-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-                      <Icon name={feature.icon} size={24} className="text-white" />
+                <Card key={index} className="hover:shadow-xl transition-all">
+                  <CardContent className="p-8 space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Icon name={feature.icon} size={28} className="text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+                        <p className="text-muted-foreground">{feature.description}</p>
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-sm uppercase text-primary flex items-center gap-2">
+                        <Icon name="List" size={16} />
+                        Что входит:
+                      </h4>
+                      <ul className="space-y-2">
+                        {feature.details.map((detail, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm">
+                            <Icon name="CheckCircle" size={16} className="text-accent mt-0.5 flex-shrink-0" />
+                            <span className="text-muted-foreground">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-accent/10 to-primary/10 rounded-lg p-4 border border-accent/20">
+                      <p className="text-sm font-medium mb-1 flex items-center gap-2">
+                        <Icon name="Lightbulb" size={16} className="text-accent" />
+                        Пример расчёта:
+                      </p>
+                      <p className="text-sm text-muted-foreground italic">{feature.example}</p>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
