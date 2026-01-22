@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Icon from '@/components/ui/icon';
 
 interface CalculatorFormProps {
@@ -131,9 +132,36 @@ const CalculatorForm = ({
           <h3 className="text-lg font-semibold mb-6">Параметры для оценки рисков</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <Label className="text-base font-semibold">
-                Волатильность рынка: {marketVolatility[0]}%
-              </Label>
+              <div className="flex items-center gap-2">
+                <Label className="text-base font-semibold">
+                  Волатильность рынка: {marketVolatility[0]}%
+                </Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                        <Icon name="HelpCircle" size={20} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm p-4" side="top">
+                      <div className="space-y-2">
+                        <p className="font-semibold">Что такое волатильность?</p>
+                        <p className="text-sm">
+                          Это "качели" вашего рынка — насколько сильно и часто меняются цены, спрос и условия работы.
+                        </p>
+                        <div className="space-y-1 text-sm">
+                          <p><strong>Низкая (0-30%):</strong> Стабильный рынок, предсказуемые продажи</p>
+                          <p><strong>Средняя (30-70%):</strong> Бывают колебания, но можно планировать</p>
+                          <p><strong>Высокая (70-100%):</strong> Резкие скачки спроса и цен, сложно прогнозировать</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Примеры: IT-услуги (низкая), мода (средняя), криптовалюта (высокая)
+                        </p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Slider
                 value={marketVolatility}
                 onValueChange={setMarketVolatility}
