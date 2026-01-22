@@ -72,8 +72,8 @@ const Pricing = () => {
     },
     {
       name: 'Премиум',
-      price: '1 499',
-      period: 'разовая оплата',
+      price: '9 999',
+      period: 'в месяц',
       description: 'Для растущего бизнеса и стартапов',
       badge: 'Популярный',
       features: [
@@ -81,6 +81,8 @@ const Pricing = () => {
         { text: 'Полная аналитика', included: true },
         { text: 'Экспорт в PDF и Excel', included: true },
         { text: 'Анализ рисков', included: true },
+        { text: 'Анализ конкурентов', included: true },
+        { text: 'Бухгалтерское обслуживание', included: true },
         { text: 'Персональные рекомендации', included: true },
         { text: 'До 3 сценариев', included: true },
       ],
@@ -91,8 +93,8 @@ const Pricing = () => {
     },
     {
       name: 'Корпоративный',
-      price: '2 999',
-      period: 'разовая оплата',
+      price: '19 999',
+      period: 'в месяц',
       description: 'Для крупного бизнеса и холдингов',
       badge: 'Максимум',
       features: [
@@ -100,6 +102,8 @@ const Pricing = () => {
         { text: 'Полная аналитика + AI', included: true },
         { text: 'Экспорт во все форматы', included: true },
         { text: 'Глубокий анализ рисков', included: true },
+        { text: 'Анализ конкурентов', included: true },
+        { text: 'Бухгалтерское обслуживание', included: true },
         { text: 'Детальные рекомендации', included: true },
         { text: 'Неограниченные сценарии', included: true },
       ],
