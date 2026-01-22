@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import { Combobox } from '@/components/ui/combobox';
 
 interface CalculatorFormProps {
   currentRevenue: number[];
@@ -38,6 +39,15 @@ interface CalculatorFormProps {
   setMessenger: (value: string) => void;
   onCalculate: () => void;
 }
+
+const popularCities = [
+  'Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань',
+  'Нижний Новгород', 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону',
+  'Уфа', 'Красноярск', 'Воронеж', 'Пермь', 'Волгоград',
+  'Краснодар', 'Саратов', 'Тюмень', 'Тольятти', 'Ижевск',
+  'Барнаул', 'Ульяновск', 'Иркутск', 'Хабаровск', 'Ярославль',
+  'Владивосток', 'Махачкала', 'Томск', 'Оренбург', 'Кемерово'
+].map(city => ({ value: city, label: city }));
 
 const CalculatorForm = ({
   currentRevenue,
@@ -405,12 +415,13 @@ const CalculatorForm = ({
 
             <div className="space-y-2">
               <Label htmlFor="city">Город <span className="text-red-500">*</span></Label>
-              <Input
-                id="city"
-                placeholder="Москва"
+              <Combobox
+                options={popularCities}
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
-                required
+                onValueChange={setCity}
+                placeholder="Выберите или введите город"
+                searchPlaceholder="Москва, Санкт-Петербург..."
+                emptyText="Город не найден — продолжайте ввод"
               />
             </div>
 
