@@ -83,17 +83,31 @@ const CalculatorForm = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <Label htmlFor="industry" className="text-base font-semibold">Отрасль</Label>
+            <Label htmlFor="industry" className="text-base font-semibold">Отрасль (ОКВЭД)</Label>
             <Select value={industry} onValueChange={setIndustry}>
               <SelectTrigger id="industry">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="retail">Розничная торговля</SelectItem>
-                <SelectItem value="tech">IT и технологии</SelectItem>
-                <SelectItem value="manufacturing">Производство</SelectItem>
-                <SelectItem value="services">Услуги</SelectItem>
-                <SelectItem value="finance">Финансы</SelectItem>
+              <SelectContent className="max-h-[400px]">
+                <SelectItem value="agriculture">А - Сельское, лесное хозяйство, охота, рыболовство</SelectItem>
+                <SelectItem value="mining">B - Добыча полезных ископаемых</SelectItem>
+                <SelectItem value="manufacturing">C - Обрабатывающие производства</SelectItem>
+                <SelectItem value="electricity">D - Обеспечение электроэнергией, газом, паром</SelectItem>
+                <SelectItem value="water">E - Водоснабжение, водоотведение, отходы</SelectItem>
+                <SelectItem value="construction">F - Строительство</SelectItem>
+                <SelectItem value="retail">G - Торговля оптовая и розничная</SelectItem>
+                <SelectItem value="transport">H - Транспортировка и хранение</SelectItem>
+                <SelectItem value="hospitality">I - Гостиницы и общественное питание</SelectItem>
+                <SelectItem value="tech">J - Информация и связь</SelectItem>
+                <SelectItem value="finance">K - Финансовая и страховая деятельность</SelectItem>
+                <SelectItem value="realestate">L - Операции с недвижимым имуществом</SelectItem>
+                <SelectItem value="professional">M - Профессиональная, научная, техническая деятельность</SelectItem>
+                <SelectItem value="administrative">N - Административная деятельность</SelectItem>
+                <SelectItem value="public">O - Государственное управление</SelectItem>
+                <SelectItem value="education">P - Образование</SelectItem>
+                <SelectItem value="healthcare">Q - Здравоохранение и социальные услуги</SelectItem>
+                <SelectItem value="culture">R - Культура, спорт, развлечения, отдых</SelectItem>
+                <SelectItem value="services">S - Предоставление прочих видов услуг</SelectItem>
               </SelectContent>
             </Select>
           </div>

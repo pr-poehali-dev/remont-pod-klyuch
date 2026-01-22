@@ -53,19 +53,47 @@ const Calculator = () => {
     const growth = growthRate[0] / 100;
     
     const industryMultipliers: Record<string, number> = {
-      'retail': 1.0,
-      'tech': 1.3,
+      'agriculture': 0.85,
+      'mining': 0.95,
       'manufacturing': 0.9,
-      'services': 1.1,
+      'electricity': 1.0,
+      'water': 0.95,
+      'construction': 1.05,
+      'retail': 1.0,
+      'transport': 0.95,
+      'hospitality': 1.1,
+      'tech': 1.3,
       'finance': 1.2,
+      'realestate': 1.15,
+      'professional': 1.2,
+      'administrative': 1.0,
+      'public': 0.8,
+      'education': 0.9,
+      'healthcare': 1.05,
+      'culture': 1.0,
+      'services': 1.1,
     };
 
     const industryRisks: Record<string, number> = {
-      'retail': 60,
-      'tech': 45,
+      'agriculture': 65,
+      'mining': 70,
       'manufacturing': 55,
-      'services': 50,
+      'electricity': 45,
+      'water': 40,
+      'construction': 60,
+      'retail': 60,
+      'transport': 55,
+      'hospitality': 70,
+      'tech': 45,
       'finance': 40,
+      'realestate': 50,
+      'professional': 45,
+      'administrative': 50,
+      'public': 30,
+      'education': 35,
+      'healthcare': 40,
+      'culture': 65,
+      'services': 50,
     };
 
     const multiplier = industryMultipliers[industry] || 1.0;
