@@ -5,6 +5,7 @@ import CalculatorForm from '@/components/calculator/CalculatorForm';
 import RiskAnalysis from '@/components/calculator/RiskAnalysis';
 import ForecastScenarios from '@/components/calculator/ForecastScenarios';
 import StrategyRecommendations from '@/components/calculator/StrategyRecommendations';
+import ChecklistUploader from '@/components/calculator/ChecklistUploader';
 import { toast } from 'sonner';
 
 interface RiskAssessment {
@@ -46,6 +47,19 @@ const Calculator = () => {
   const [deliveryMethod, setDeliveryMethod] = useState('email');
   const [messenger, setMessenger] = useState('');
   const [forecast, setForecast] = useState<ForecastResult | null>(null);
+
+  const handleChecklistData = (data: any) => {
+    if (data.revenue) setCurrentRevenue([data.revenue]);
+    if (data.growth) setGrowthRate([data.growth]);
+    if (data.industry) setIndustry(data.industry);
+    if (data.employees) setEmployees([data.employees]);
+    if (data.volatility) setMarketVolatility([data.volatility]);
+    if (data.competition) setCompetition([data.competition]);
+    if (data.name) setName(data.name);
+    if (data.email) setEmail(data.email);
+    if (data.phone) setPhone(data.phone);
+    if (data.company) setCompany(data.company);
+  };
 
   const calculateForecast = () => {
     if (!name || !email || !phone || !company) {
@@ -271,6 +285,8 @@ const Calculator = () => {
                 Получите прогноз с анализом рисков и сценариями развития
               </p>
             </div>
+
+            <ChecklistUploader onDataExtracted={handleChecklistData} />
 
             <CalculatorForm
               currentRevenue={currentRevenue}
