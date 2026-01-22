@@ -1,12 +1,31 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
+import { toast } from 'sonner';
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<{name: string, price: string} | null>(null);
+
+  const handlePayment = (planName: string, price: string) => {
+    setSelectedPlan({name: planName, price});
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentComplete = () => {
+    toast.success('Оплата получена! Переходим к форме...');
+    setShowPaymentModal(false);
+    setTimeout(() => {
+      navigate('/forecast-form');
+    }, 1000);
+  };
   const plans = [
     {
       name: 'Базовый',
@@ -29,7 +48,7 @@ const Pricing = () => {
     },
     {
       name: 'Профессиональный',
-      price: '4 990',
+      price: '1 499',
       period: 'в месяц',
       description: 'Для растущего бизнеса и стартапов',
       badge: 'Популярный',
@@ -42,13 +61,14 @@ const Pricing = () => {
         { text: 'До 3 сценариев', included: true },
         { text: 'Email поддержка', included: true },
       ],
-      cta: 'Заполнить данные',
-      ctaLink: '/forecast-form',
-      variant: 'default' as const
+      cta: 'Оплатить',
+      ctaLink: null,
+      variant: 'default' as const,
+      isPaid: true
     },
     {
       name: 'Корпоративный',
-      price: '19 990',
+      price: '2 999',
       period: 'в месяц',
       description: 'Для крупного бизнеса и холдингов',
       badge: 'Максимум',
@@ -61,9 +81,10 @@ const Pricing = () => {
         { text: 'Неограниченные сценарии', included: true },
         { text: 'Поддержка 24/7 + менеджер', included: true },
       ],
-      cta: 'Заполнить данные',
-      ctaLink: '/forecast-form',
-      variant: 'default' as const
+      cta: 'Оплатить',
+      ctaLink: null,
+      variant: 'default' as const,
+      isPaid: true
     }
   ];
 
@@ -155,17 +176,29 @@ const Pricing = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button 
-                    variant={plan.variant} 
-                    size="lg" 
-                    className="w-full text-lg"
-                    asChild
-                  >
-                    <Link to={plan.ctaLink}>
+                  {plan.isPaid ? (
+                    <Button 
+                      variant={plan.variant} 
+                      size="lg" 
+                      className="w-full text-lg"
+                      onClick={() => handlePayment(plan.name, plan.price)}
+                    >
                       {plan.cta}
-                      <Icon name="ArrowRight" className="ml-2" size={18} />
-                    </Link>
-                  </Button>
+                      <Icon name="CreditCard" className="ml-2" size={18} />
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant={plan.variant} 
+                      size="lg" 
+                      className="w-full text-lg"
+                      asChild
+                    >
+                      <Link to={plan.ctaLink}>
+                        {plan.cta}
+                        <Icon name="ArrowRight" className="ml-2" size={18} />
+                      </Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -196,6 +229,71 @@ const Pricing = () => {
           </div>
         </div>
       </main>
+
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Оплата тарифа {selectedPlan?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <p className="text-3xl font-bold">{selectedPlan?.price} ₽</p>
+              <p className="text-muted-foreground">Оплата через Систему Быстрых Платежей (СБП)</p>
+            </div>
+
+            <div className="bg-secondary/20 p-6 rounded-lg space-y-4">
+              <div className="flex justify-center">
+                <div className="w-64 h-64 bg-white p-4 rounded-lg">
+                  <img 
+                    src={`https://qr.nspk.ru/proxyapp/apiQR/c2m/api/v1/create?redirectUrl=https://qr.nspk.ru/AS10003TMQCB68M0AJDV90NP9EMCR04C?type=01&bank=100000000111&sum=${selectedPlan?.price.replace(/\s/g, '')}00&cur=RUB&payeeId=79277486868&lastName=Сбербанк&crc=9F55`}
+                    alt="QR код для оплаты"
+                    className="w-full h-full"
+                  />
+                </div>
+              </div>
+              <div className="text-center space-y-2">
+                <p className="font-semibold">Отсканируйте QR-код</p>
+                <p className="text-sm text-muted-foreground">
+                  Откройте приложение вашего банка и отсканируйте код для оплаты через СБП
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-accent/10 p-4 rounded-lg space-y-2">
+              <div className="flex items-start gap-2">
+                <Icon name="Smartphone" size={20} className="text-accent mt-0.5" />
+                <div className="flex-1 text-sm">
+                  <p className="font-semibold">Получатель:</p>
+                  <p className="text-muted-foreground">Сбербанк: +7 927 748-68-68</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Button 
+                size="lg" 
+                className="w-full"
+                onClick={handlePaymentComplete}
+              >
+                <Icon name="CheckCircle" className="mr-2" />
+                Я оплатил
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="w-full"
+                onClick={() => setShowPaymentModal(false)}
+              >
+                Отмена
+              </Button>
+            </div>
+
+            <p className="text-xs text-center text-muted-foreground">
+              После оплаты вы перейдёте на страницу заполнения данных для прогноза
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
