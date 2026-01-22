@@ -35,7 +35,7 @@ interface ForecastResult {
 const Calculator = () => {
   const [currentRevenue, setCurrentRevenue] = useState([1000000]);
   const [growthRate, setGrowthRate] = useState([10]);
-  const [industry, setIndustry] = useState('retail');
+  const [industry, setIndustry] = useState('retail_store');
   const [employees, setEmployees] = useState([10]);
   const [marketVolatility, setMarketVolatility] = useState([50]);
   const [competition, setCompetition] = useState([50]);
@@ -62,47 +62,47 @@ const Calculator = () => {
     const growth = growthRate[0] / 100;
     
     const industryMultipliers: Record<string, number> = {
-      'agriculture': 0.85,
-      'mining': 0.95,
-      'manufacturing': 0.9,
+      'agriculture_crop': 0.85, 'agriculture_animal': 0.88, 'agriculture_mixed': 0.86, 'agriculture_service': 0.90, 'forestry': 0.82, 'fishing': 0.83,
+      'mining_coal': 0.92, 'mining_oil': 0.98, 'mining_metal': 0.95, 'mining_other': 0.93,
+      'manufacturing_food': 0.92, 'manufacturing_textile': 0.88, 'manufacturing_wood': 0.87, 'manufacturing_paper': 0.90, 'manufacturing_chemical': 0.95, 'manufacturing_metal': 0.93, 'manufacturing_electronics': 1.05, 'manufacturing_machinery': 0.94, 'manufacturing_vehicles': 0.91, 'manufacturing_other': 0.89,
       'electricity': 1.0,
       'water': 0.95,
-      'construction': 1.05,
-      'retail': 1.0,
-      'transport': 0.95,
-      'hospitality': 1.1,
-      'tech': 1.3,
-      'finance': 1.2,
-      'realestate': 1.15,
-      'professional': 1.2,
-      'administrative': 1.0,
+      'construction_buildings': 1.08, 'construction_civil': 1.05, 'construction_special': 1.03,
+      'retail_auto': 1.02, 'retail_wholesale': 1.0, 'retail_store': 0.98,
+      'transport_land': 0.96, 'transport_water': 0.93, 'transport_air': 0.98, 'transport_warehouse': 0.97, 'transport_postal': 0.95,
+      'hospitality_hotel': 1.12, 'hospitality_food': 1.08,
+      'tech_publishing': 1.15, 'tech_media': 1.20, 'tech_telecom': 1.25, 'tech_it': 1.35,
+      'finance_banking': 1.18, 'finance_insurance': 1.20, 'finance_investment': 1.25,
+      'realestate_operations': 1.15,
+      'professional_legal': 1.22, 'professional_management': 1.25, 'professional_architecture': 1.18, 'professional_research': 1.30, 'professional_advertising': 1.20, 'professional_design': 1.15,
+      'administrative_rental': 1.0, 'administrative_employment': 1.05, 'administrative_travel': 0.95, 'administrative_security': 0.98,
       'public': 0.8,
-      'education': 0.9,
-      'healthcare': 1.05,
-      'culture': 1.0,
-      'services': 1.1,
+      'education_preschool': 0.88, 'education_school': 0.85, 'education_higher': 0.92, 'education_additional': 1.05,
+      'healthcare_hospital': 1.08, 'healthcare_social': 0.95,
+      'culture_creative': 1.02, 'culture_gambling': 1.15, 'culture_sports': 1.08,
+      'services_repair': 1.05, 'services_personal': 1.12,
     };
 
     const industryRisks: Record<string, number> = {
-      'agriculture': 65,
-      'mining': 70,
-      'manufacturing': 55,
+      'agriculture_crop': 68, 'agriculture_animal': 65, 'agriculture_mixed': 67, 'agriculture_service': 62, 'forestry': 70, 'fishing': 72,
+      'mining_coal': 75, 'mining_oil': 70, 'mining_metal': 73, 'mining_other': 68,
+      'manufacturing_food': 52, 'manufacturing_textile': 60, 'manufacturing_wood': 58, 'manufacturing_paper': 55, 'manufacturing_chemical': 50, 'manufacturing_metal': 56, 'manufacturing_electronics': 48, 'manufacturing_machinery': 54, 'manufacturing_vehicles': 58, 'manufacturing_other': 60,
       'electricity': 45,
       'water': 40,
-      'construction': 60,
-      'retail': 60,
-      'transport': 55,
-      'hospitality': 70,
-      'tech': 45,
-      'finance': 40,
-      'realestate': 50,
-      'professional': 45,
-      'administrative': 50,
+      'construction_buildings': 62, 'construction_civil': 65, 'construction_special': 58,
+      'retail_auto': 58, 'retail_wholesale': 55, 'retail_store': 62,
+      'transport_land': 56, 'transport_water': 62, 'transport_air': 60, 'transport_warehouse': 52, 'transport_postal': 54,
+      'hospitality_hotel': 72, 'hospitality_food': 68,
+      'tech_publishing': 50, 'tech_media': 55, 'tech_telecom': 42, 'tech_it': 40,
+      'finance_banking': 38, 'finance_insurance': 40, 'finance_investment': 45,
+      'realestate_operations': 50,
+      'professional_legal': 42, 'professional_management': 40, 'professional_architecture': 48, 'professional_research': 38, 'professional_advertising': 52, 'professional_design': 55,
+      'administrative_rental': 48, 'administrative_employment': 50, 'administrative_travel': 65, 'administrative_security': 52,
       'public': 30,
-      'education': 35,
-      'healthcare': 40,
-      'culture': 65,
-      'services': 50,
+      'education_preschool': 38, 'education_school': 32, 'education_higher': 35, 'education_additional': 45,
+      'healthcare_hospital': 42, 'healthcare_social': 48,
+      'culture_creative': 68, 'culture_gambling': 75, 'culture_sports': 60,
+      'services_repair': 55, 'services_personal': 58,
     };
 
     const multiplier = industryMultipliers[industry] || 1.0;
