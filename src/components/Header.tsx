@@ -8,8 +8,8 @@ const Header = () => {
 
   const navLinks = [
     { name: 'Главная', path: '/' },
-    { name: 'Услуги', path: '/services' },
     { name: 'Калькулятор', path: '/calculator' },
+    { name: 'Тарифы', path: '/pricing' },
     { name: 'Контакты', path: '/contacts' },
   ];
 
@@ -18,12 +18,12 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center transition-transform group-hover:scale-105">
-              <Icon name="Home" className="text-white" size={24} />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center transition-transform group-hover:scale-105">
+              <Icon name="TrendingUp" className="text-white" size={24} />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl text-foreground">Ремонтируем</span>
-              <span className="text-xs text-muted-foreground">под ключ</span>
+              <span className="font-bold text-xl text-foreground">Бизнес-Прогнозатор</span>
+              <span className="text-xs text-muted-foreground">Ваше будущее в цифрах</span>
             </div>
           </Link>
 
@@ -40,12 +40,15 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <a href="tel:+79370768680" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-              <Icon name="Phone" size={20} />
-              <span className="font-semibold">+7 (937) 076-86-80</span>
-            </a>
-            <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-              Консультация
+            <Button variant="outline" asChild>
+              <Link to="/calculator">
+                Попробовать бесплатно
+              </Link>
+            </Button>
+            <Button className="bg-primary hover:bg-primary/90" asChild>
+              <Link to="/contacts">
+                Связаться
+              </Link>
             </Button>
           </div>
 
@@ -71,15 +74,15 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
-              <a
-                href="tel:+79370768680"
-                className="flex items-center gap-2 text-foreground hover:text-primary transition-colors py-2"
-              >
-                <Icon name="Phone" size={20} />
-                <span className="font-semibold">+7 (937) 076-86-80</span>
-              </a>
-              <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 w-full">
-                Консультация
+              <Button variant="outline" className="w-full" asChild>
+                <Link to="/calculator">
+                  Попробовать бесплатно
+                </Link>
+              </Button>
+              <Button className="bg-primary hover:bg-primary/90 w-full" asChild>
+                <Link to="/contacts">
+                  Связаться
+                </Link>
               </Button>
             </nav>
           </div>
