@@ -57,7 +57,7 @@ const Pricing = () => {
     {
       name: 'Профессиональный',
       price: '1 499',
-      period: 'в месяц',
+      period: 'разовая оплата',
       description: 'Для растущего бизнеса и стартапов',
       badge: 'Популярный',
       features: [
@@ -77,7 +77,7 @@ const Pricing = () => {
     {
       name: 'Корпоративный',
       price: '2 999',
-      period: 'в месяц',
+      period: 'разовая оплата',
       description: 'Для крупного бизнеса и холдингов',
       badge: 'Максимум',
       features: [
