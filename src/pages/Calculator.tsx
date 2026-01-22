@@ -21,11 +21,19 @@ interface RiskAssessment {
   }[];
 }
 
+interface Recommendation {
+  title: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  icon: string;
+}
+
 interface ForecastResult {
   optimistic: { month: number; year: number; fiveYears: number };
   base: { month: number; year: number; fiveYears: number };
   pessimistic: { month: number; year: number; fiveYears: number };
   risks: RiskAssessment;
+  recommendations: Recommendation[];
 }
 
 const Calculator = () => {
@@ -83,6 +91,89 @@ const Calculator = () => {
     const optimisticMultiplier = 1.3;
     const pessimisticMultiplier = 0.7 * riskFactor;
 
+    const recommendations: Recommendation[] = [];
+
+    if (volatilityRisk > 70) {
+      recommendations.push({
+        title: 'Диверсифицируйте источники дохода',
+        description: 'Высокая волатильность рынка требует распределения рисков. Рассмотрите дополнительные каналы продаж или новые продуктовые линейки.',
+        priority: 'high',
+        icon: 'Shield'
+      });
+    }
+
+    if (competitionRisk > 70) {
+      recommendations.push({
+        title: 'Усильте уникальное торговое предложение',
+        description: 'Высокая конкуренция требует четкого позиционирования. Выделите ключевые отличия вашего продукта и усильте маркетинг.',
+        priority: 'high',
+        icon: 'Target'
+      });
+    }
+
+    if (employees[0] < 10) {
+      recommendations.push({
+        title: 'Инвестируйте в команду',
+        description: 'Малый масштаб ограничивает рост. Наймите ключевых специалистов в продажи и разработку для масштабирования.',
+        priority: 'high',
+        icon: 'UserPlus'
+      });
+    }
+
+    if (growthRate[0] < 10) {
+      recommendations.push({
+        title: 'Увеличьте инвестиции в рост',
+        description: 'Низкий темп роста может привести к отставанию от конкурентов. Рассмотрите увеличение бюджета на маркетинг и R&D.',
+        priority: 'medium',
+        icon: 'TrendingUp'
+      });
+    }
+
+    if (industryRisk > 60) {
+      recommendations.push({
+        title: 'Адаптируйтесь к отраслевым изменениям',
+        description: 'Ваша отрасль находится в зоне риска. Следите за трендами, будьте готовы к быстрым изменениям стратегии.',
+        priority: 'medium',
+        icon: 'AlertTriangle'
+      });
+    }
+
+    if (currentRevenue[0] < 500000) {
+      recommendations.push({
+        title: 'Оптимизируйте операционные расходы',
+        description: 'При текущей выручке критически важна финансовая эффективность. Проанализируйте структуру затрат и устраните неэффективные расходы.',
+        priority: 'medium',
+        icon: 'DollarSign'
+      });
+    }
+
+    if (volatilityRisk < 30 && competitionRisk < 30) {
+      recommendations.push({
+        title: 'Агрессивное масштабирование',
+        description: 'Благоприятные рыночные условия и низкая конкуренция создают окно возможностей. Увеличьте инвестиции в захват рынка.',
+        priority: 'high',
+        icon: 'Rocket'
+      });
+    }
+
+    if (employees[0] > 100 && growthRate[0] < 15) {
+      recommendations.push({
+        title: 'Проверьте эффективность команды',
+        description: 'Большая команда при низком росте может указывать на проблемы с продуктивностью. Пересмотрите процессы и KPI.',
+        priority: 'medium',
+        icon: 'Users'
+      });
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push({
+        title: 'Поддерживайте текущую стратегию',
+        description: 'Ваши показатели сбалансированы. Продолжайте выполнение текущей стратегии с регулярным мониторингом метрик.',
+        priority: 'low',
+        icon: 'CheckCircle'
+      });
+    }
+
     setForecast({
       optimistic: {
         month: Math.round(baseMonth * optimisticMultiplier),
@@ -127,10 +218,11 @@ const Calculator = () => {
             icon: 'Scale'
           }
         ]
-      }
+      },
+      recommendations
     });
 
-    toast.success('Прогноз с анализом рисков готов!');
+    toast.success('Прогноз с рекомендациями готов!');
   };
 
   const getRiskColor = (level: number) => {
@@ -143,6 +235,24 @@ const Calculator = () => {
     if (level > 70) return 'bg-red-500';
     if (level > 40) return 'bg-yellow-500';
     return 'bg-green-500';
+  };
+
+  const getPriorityColor = (priority: 'high' | 'medium' | 'low') => {
+    if (priority === 'high') return 'border-red-500 bg-red-500/5';
+    if (priority === 'medium') return 'border-yellow-500 bg-yellow-500/5';
+    return 'border-green-500 bg-green-500/5';
+  };
+
+  const getPriorityBadgeColor = (priority: 'high' | 'medium' | 'low') => {
+    if (priority === 'high') return 'bg-red-500';
+    if (priority === 'medium') return 'bg-yellow-500';
+    return 'bg-green-500';
+  };
+
+  const getPriorityText = (priority: 'high' | 'medium' | 'low') => {
+    if (priority === 'high') return 'Высокий приоритет';
+    if (priority === 'medium') return 'Средний приоритет';
+    return 'Низкий приоритет';
   };
 
   return (
@@ -441,6 +551,44 @@ const Calculator = () => {
                         <Icon name="Info" size={16} className="inline mr-1" />
                         Прогноз учитывает волатильность рынка, конкуренцию, отраслевые особенности и масштаб бизнеса. 
                         Для детального анализа и персональных рекомендаций выберите платный тариф.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-2 border-accent animate-fade-in">
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <Icon name="Lightbulb" className="text-accent" />
+                      Рекомендации по стратегии
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {forecast.recommendations.map((rec, index) => (
+                        <div key={index} className={`p-6 rounded-lg border-2 ${getPriorityColor(rec.priority)}`}>
+                          <div className="flex items-start gap-4">
+                            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <Icon name={rec.icon} size={24} className="text-accent" />
+                            </div>
+                            <div className="flex-1 space-y-2">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-bold">{rec.title}</h3>
+                                <span className={`text-xs px-2 py-1 rounded-full text-white ${getPriorityBadgeColor(rec.priority)}`}>
+                                  {getPriorityText(rec.priority)}
+                                </span>
+                              </div>
+                              <p className="text-muted-foreground">{rec.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-6 p-4 bg-accent/5 rounded-lg border border-accent/20">
+                      <p className="text-sm text-muted-foreground">
+                        <Icon name="Info" size={16} className="inline mr-1" />
+                        Рекомендации сформированы на основе анализа рисков и параметров вашего бизнеса. 
+                        Для персональной консультации и детального плана действий свяжитесь с нами.
                       </p>
                     </div>
                   </CardContent>
