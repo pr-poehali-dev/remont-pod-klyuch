@@ -201,12 +201,104 @@ const Index = () => {
           </div>
         </section>
 
+        <section className="py-20 bg-gradient-to-br from-accent/10 to-primary/10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <Card className="border-2 border-accent shadow-2xl">
+                <CardContent className="p-12">
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-accent/10 rounded-2xl mb-6">
+                      <Icon name="Rocket" size={40} className="text-accent" />
+                    </div>
+                    <h2 className="text-4xl font-bold mb-4">Только планируете открыть бизнес?</h2>
+                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                      Специальный тариф для начинающих предпринимателей и стартаперов
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div className="space-y-4">
+                      <h3 className="text-2xl font-bold">Что входит:</h3>
+                      <ul className="space-y-3">
+                        {[
+                          'Финансовая модель бизнеса с нуля',
+                          'Анализ рынка и конкурентов',
+                          'Расчет точки безубыточности',
+                          'Прогноз окупаемости инвестиций',
+                          'Оценка стартовых затрат',
+                          'Сценарии развития на 3 года',
+                          'План выхода на прибыль',
+                          'Консультация со специалистом'
+                        ].map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-3">
+                            <Icon name="Check" size={20} className="text-accent mt-0.5 flex-shrink-0" />
+                            <span className="text-foreground">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div className="bg-accent/5 rounded-2xl p-6 border-2 border-accent/20">
+                        <div className="text-center space-y-3">
+                          <p className="text-sm text-muted-foreground uppercase tracking-wide">Стоимость</p>
+                          <div className="flex items-baseline justify-center gap-2">
+                            <span className="text-5xl font-bold text-accent">15 990</span>
+                            <span className="text-2xl text-accent">₽</span>
+                          </div>
+                          <p className="text-muted-foreground">единоразово</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-secondary/30 rounded-xl p-6 space-y-3">
+                        <div className="flex items-center gap-2 text-primary">
+                          <Icon name="Clock" size={20} />
+                          <span className="font-semibold">Срок: 5-7 рабочих дней</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-primary">
+                          <Icon name="FileText" size={20} />
+                          <span className="font-semibold">Формат: PDF + Excel</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-primary">
+                          <Icon name="Users" size={20} />
+                          <span className="font-semibold">Встреча: онлайн 1.5 часа</span>
+                        </div>
+                      </div>
+
+                      <Button size="lg" className="w-full text-lg bg-accent hover:bg-accent/90" asChild>
+                        <Link to="/contacts">
+                          <Icon name="MessagesSquare" className="mr-2" />
+                          Обсудить мой проект
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-primary/5 rounded-xl p-6 border border-primary/20">
+                    <div className="flex items-start gap-3">
+                      <Icon name="Lightbulb" size={24} className="text-primary mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-semibold mb-2">Для кого этот тариф?</p>
+                        <p className="text-sm text-muted-foreground">
+                          Идеально для тех, кто хочет открыть бизнес, но сомневается в идее. Мы поможем просчитать все сценарии, 
+                          оценить риски и понять, стоит ли вкладывать деньги. Вы получите профессиональную финансовую модель, 
+                          которую можно показать инвесторам или использовать для получения кредита.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
         <section className="py-20 bg-secondary/30">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16 space-y-4">
               <h2 className="text-4xl font-bold">Отзывы клиентов</h2>
               <p className="text-xl text-muted-foreground">
-                Что говорят предприниматели о Бизнес-Прогнозаторе
+                Что говорят предприниматели о План А
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">

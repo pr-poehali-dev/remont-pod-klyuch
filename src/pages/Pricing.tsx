@@ -80,6 +80,42 @@ const Pricing = () => {
             </p>
           </div>
 
+          <div className="mb-16 max-w-5xl mx-auto">
+            <Card className="border-2 border-accent bg-gradient-to-br from-accent/5 to-primary/5">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <Icon name="Rocket" size={36} className="text-accent" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left space-y-3">
+                    <div className="flex items-center gap-3 justify-center md:justify-start">
+                      <h2 className="text-3xl font-bold">Только планируете открыть бизнес?</h2>
+                      <Badge className="bg-accent text-white">Специально для новичков</Badge>
+                    </div>
+                    <p className="text-lg text-muted-foreground">
+                      Моделируем ваш будущий бизнес с нуля: финансовая модель, анализ рынка, прогноз окупаемости и рисков
+                    </p>
+                    <div className="flex items-center gap-2 text-2xl font-bold text-accent justify-center md:justify-start">
+                      <Icon name="Sparkles" size={24} />
+                      <span>От 15 990 ₽</span>
+                      <span className="text-base font-normal text-muted-foreground">единоразово</span>
+                    </div>
+                  </div>
+                  <Button size="lg" className="bg-accent hover:bg-accent/90" asChild>
+                    <Link to="/contacts">
+                      <Icon name="MessagesSquare" className="mr-2" />
+                      Обсудить проект
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-muted-foreground">Тарифы для действующего бизнеса</h2>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {plans.map((plan, index) => (
               <Card 
