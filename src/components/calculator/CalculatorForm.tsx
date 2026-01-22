@@ -30,6 +30,8 @@ interface CalculatorFormProps {
   setPhone: (value: string) => void;
   company: string;
   setCompany: (value: string) => void;
+  city: string;
+  setCity: (value: string) => void;
   deliveryMethod: string;
   setDeliveryMethod: (value: string) => void;
   messenger: string;
@@ -58,6 +60,8 @@ const CalculatorForm = ({
   setPhone,
   company,
   setCompany,
+  city,
+  setCity,
   deliveryMethod,
   setDeliveryMethod,
   messenger,
@@ -397,6 +401,17 @@ const CalculatorForm = ({
                   required
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city">Город <span className="text-red-500">*</span></Label>
+              <Input
+                id="city"
+                placeholder="Москва"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

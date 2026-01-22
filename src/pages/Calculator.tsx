@@ -43,6 +43,7 @@ const Calculator = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
+  const [city, setCity] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState('email');
   const [messenger, setMessenger] = useState('');
   const [forecast, setForecast] = useState<ForecastResult | null>(null);
@@ -293,6 +294,8 @@ const Calculator = () => {
               setPhone={setPhone}
               company={company}
               setCompany={setCompany}
+              city={city}
+              setCity={setCity}
               deliveryMethod={deliveryMethod}
               setDeliveryMethod={setDeliveryMethod}
               messenger={messenger}
