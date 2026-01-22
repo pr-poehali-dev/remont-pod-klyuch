@@ -10,6 +10,7 @@ const Header = () => {
     { name: 'Главная', path: '/' },
     { name: 'Калькулятор', path: '/calculator' },
     { name: 'Тарифы', path: '/pricing' },
+    { name: 'Бухгалтерия', path: '/accounting' },
     { name: 'Контакты', path: '/contacts' },
   ];
 

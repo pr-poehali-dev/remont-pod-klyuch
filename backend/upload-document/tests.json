@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Upload document success",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "fileName": "test-invoice.pdf",
+        "fileContent": "JVBERi0xLjQKJeLjz9MKMyAwIG9iaiA8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCA1OTUgODQyXS9Db250ZW50cyA0IDAgUj4+CmVuZG9iago0IDAgb2JqIDw8L0xlbmd0aCAzNj4+CnN0cmVhbQpCVApFVAplbmRzdHJlYW0KZW5kb2JqCjIgMCBvYmogPDwvVHlwZS9QYWdlcy9LaWRzWzMgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjEgMCBvYmogPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSPj4KZW5kb2JqCnhyZWYKMCA1CnRyYWlsZXIgPDwvU2l6ZSA1L1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMjE2CiUlRU9GCg==",
+        "fileType": "invoice"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "fileName": "string",
+        "fileUrl": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Missing file name error",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "fileContent": "base64data"
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
