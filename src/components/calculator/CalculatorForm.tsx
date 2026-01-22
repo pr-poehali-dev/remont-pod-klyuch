@@ -55,30 +55,60 @@ const CalculatorForm = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <Label className="text-base font-semibold">
-              Текущая месячная выручка: {currentRevenue[0].toLocaleString('ru-RU')} ₽
+              Текущая месячная выручка
             </Label>
-            <Slider
-              value={currentRevenue}
-              onValueChange={setCurrentRevenue}
-              min={100000}
-              max={10000000}
-              step={100000}
-              className="w-full"
-            />
+            <div className="flex gap-3 items-center">
+              <Slider
+                value={currentRevenue}
+                onValueChange={setCurrentRevenue}
+                min={100000}
+                max={10000000}
+                step={100000}
+                className="flex-1"
+              />
+              <Input
+                type="number"
+                value={currentRevenue[0]}
+                onChange={(e) => {
+                  const val = Math.max(100000, Math.min(10000000, Number(e.target.value) || 100000));
+                  setCurrentRevenue([val]);
+                }}
+                className="w-32"
+                min={100000}
+                max={10000000}
+                step={100000}
+              />
+              <span className="text-sm text-muted-foreground">₽</span>
+            </div>
           </div>
 
           <div className="space-y-4">
             <Label className="text-base font-semibold">
-              Ожидаемый темп роста: {growthRate[0]}% в год
+              Ожидаемый темп роста
             </Label>
-            <Slider
-              value={growthRate}
-              onValueChange={setGrowthRate}
-              min={-20}
-              max={100}
-              step={5}
-              className="w-full"
-            />
+            <div className="flex gap-3 items-center">
+              <Slider
+                value={growthRate}
+                onValueChange={setGrowthRate}
+                min={-20}
+                max={100}
+                step={5}
+                className="flex-1"
+              />
+              <Input
+                type="number"
+                value={growthRate[0]}
+                onChange={(e) => {
+                  const val = Math.max(-20, Math.min(100, Number(e.target.value) || 10));
+                  setGrowthRate([val]);
+                }}
+                className="w-24"
+                min={-20}
+                max={100}
+                step={5}
+              />
+              <span className="text-sm text-muted-foreground">%</span>
+            </div>
           </div>
         </div>
 
@@ -115,16 +145,31 @@ const CalculatorForm = ({
 
           <div className="space-y-4">
             <Label className="text-base font-semibold">
-              Количество сотрудников: {employees[0]}
+              Количество сотрудников
             </Label>
-            <Slider
-              value={employees}
-              onValueChange={setEmployees}
-              min={1}
-              max={500}
-              step={1}
-              className="w-full"
-            />
+            <div className="flex gap-3 items-center">
+              <Slider
+                value={employees}
+                onValueChange={setEmployees}
+                min={1}
+                max={500}
+                step={1}
+                className="flex-1"
+              />
+              <Input
+                type="number"
+                value={employees[0]}
+                onChange={(e) => {
+                  const val = Math.max(1, Math.min(500, Number(e.target.value) || 1));
+                  setEmployees([val]);
+                }}
+                className="w-24"
+                min={1}
+                max={500}
+                step={1}
+              />
+              <span className="text-sm text-muted-foreground w-8">чел</span>
+            </div>
           </div>
         </div>
 
@@ -134,7 +179,7 @@ const CalculatorForm = ({
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Label className="text-base font-semibold">
-                  Волатильность рынка: {marketVolatility[0]}%
+                  Волатильность рынка
                 </Label>
                 <TooltipProvider>
                   <Tooltip>
@@ -162,14 +207,29 @@ const CalculatorForm = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <Slider
-                value={marketVolatility}
-                onValueChange={setMarketVolatility}
-                min={0}
-                max={100}
-                step={5}
-                className="w-full"
-              />
+              <div className="flex gap-3 items-center">
+                <Slider
+                  value={marketVolatility}
+                  onValueChange={setMarketVolatility}
+                  min={0}
+                  max={100}
+                  step={5}
+                  className="flex-1"
+                />
+                <Input
+                  type="number"
+                  value={marketVolatility[0]}
+                  onChange={(e) => {
+                    const val = Math.max(0, Math.min(100, Number(e.target.value) || 0));
+                    setMarketVolatility([val]);
+                  }}
+                  className="w-24"
+                  min={0}
+                  max={100}
+                  step={5}
+                />
+                <span className="text-sm text-muted-foreground">%</span>
+              </div>
               <p className="text-sm text-muted-foreground">
                 Насколько нестабилен ваш рынок
               </p>
@@ -177,16 +237,31 @@ const CalculatorForm = ({
 
             <div className="space-y-4">
               <Label className="text-base font-semibold">
-                Уровень конкуренции: {competition[0]}%
+                Уровень конкуренции
               </Label>
-              <Slider
-                value={competition}
-                onValueChange={setCompetition}
-                min={0}
-                max={100}
-                step={5}
-                className="w-full"
-              />
+              <div className="flex gap-3 items-center">
+                <Slider
+                  value={competition}
+                  onValueChange={setCompetition}
+                  min={0}
+                  max={100}
+                  step={5}
+                  className="flex-1"
+                />
+                <Input
+                  type="number"
+                  value={competition[0]}
+                  onChange={(e) => {
+                    const val = Math.max(0, Math.min(100, Number(e.target.value) || 0));
+                    setCompetition([val]);
+                  }}
+                  className="w-24"
+                  min={0}
+                  max={100}
+                  step={5}
+                />
+                <span className="text-sm text-muted-foreground">%</span>
+              </div>
               <p className="text-sm text-muted-foreground">
                 Насколько конкурентна ваша ниша
               </p>
