@@ -42,8 +42,8 @@ const Pricing = () => {
         { text: 'До 3 сценариев', included: true },
         { text: 'Email поддержка', included: true },
       ],
-      cta: 'Выбрать план',
-      ctaLink: '/contacts',
+      cta: 'Заполнить данные',
+      ctaLink: '/forecast-form',
       variant: 'default' as const
     },
     {
@@ -61,8 +61,8 @@ const Pricing = () => {
         { text: 'Неограниченные сценарии', included: true },
         { text: 'Поддержка 24/7 + менеджер', included: true },
       ],
-      cta: 'Связаться',
-      ctaLink: '/contacts',
+      cta: 'Заполнить данные',
+      ctaLink: '/forecast-form',
       variant: 'default' as const
     }
   ];

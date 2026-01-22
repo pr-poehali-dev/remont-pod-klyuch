@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Calculator from "./pages/Calculator";
 import Pricing from "./pages/Pricing";
 import Contacts from "./pages/Contacts";
+import ForecastForm from "./pages/ForecastForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contacts" element={<Contacts />} />
+          <Route path="/forecast-form" element={<ForecastForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
