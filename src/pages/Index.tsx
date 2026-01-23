@@ -329,49 +329,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Additional Service - Calculator */}
-        <section className="py-20 bg-gradient-to-br from-accent/10 to-primary/10">
-          <div className="container mx-auto px-4">
-            <Card className="max-w-5xl mx-auto border-2 border-accent">
-              <CardContent className="p-12">
-                <div className="flex flex-col md:flex-row items-center gap-8">
-                  <div className="w-20 h-20 bg-accent/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <Icon name="LineChart" size={40} className="text-accent" />
-                  </div>
-                  <div className="flex-1 text-center md:text-left space-y-3">
-                    <Badge className="bg-accent text-white">Дополнительная услуга</Badge>
-                    <h2 className="text-3xl font-bold">Калькулятор прогнозов</h2>
-                    <p className="text-lg text-muted-foreground">
-                      Нужен прогноз развития бизнеса? Воспользуйтесь нашим бесплатным калькулятором для оценки выручки, 
-                      рисков и получения персональных рекомендаций на срок от 1 месяца до 5 лет.
-                    </p>
-                    <ul className="space-y-2 text-left">
-                      <li className="flex items-start gap-2">
-                        <Icon name="Check" size={16} className="text-accent mt-0.5" />
-                        <span className="text-sm">Прогноз выручки с учётом отрасли и команды</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Icon name="Check" size={16} className="text-accent mt-0.5" />
-                        <span className="text-sm">Оценка рисков и сценарное моделирование</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Icon name="Check" size={16} className="text-accent mt-0.5" />
-                        <span className="text-sm">Персональные рекомендации по стратегии</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <Button size="lg" variant="default" className="bg-accent hover:bg-accent/90" asChild>
-                    <Link to="/calculator">
-                      <Icon name="Calculator" className="mr-2" />
-                      Попробовать бесплатно
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="py-20">
           <div className="container mx-auto px-4">
