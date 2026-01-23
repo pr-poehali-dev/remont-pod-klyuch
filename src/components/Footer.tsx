@@ -89,8 +89,15 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t pt-8 text-center text-sm text-muted-foreground">
+        <div className="border-t pt-8 text-center text-sm text-muted-foreground space-y-2">
           <p>© {currentYear} БухКонтроль. Все права защищены.</p>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Link to="/privacy" className="hover:text-primary transition-colors underline">
+              Политика конфиденциальности
+            </Link>
+            <span>•</span>
+            <span>Обработка персональных данных в соответствии с 152-ФЗ</span>
+          </div>
         </div>
       </div>
     </footer>

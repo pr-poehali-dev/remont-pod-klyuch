@@ -11,6 +11,7 @@ import Pricing from "./pages/Pricing";
 import Contacts from "./pages/Contacts";
 import ForecastForm from "./pages/ForecastForm";
 import Accounting from "./pages/Accounting";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/forecast-form" element={<ForecastForm />} />
           <Route path="/accounting" element={<Accounting />} />
+          <Route path="/privacy" element={<Privacy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
