@@ -11,15 +11,15 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Icon name="TrendingUp" className="text-white" size={20} />
+                <Icon name="FileCheck" className="text-white" size={20} />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">План А</span>
-                <span className="text-xs text-muted-foreground">Ваше будущее в цифрах</span>
+                <span className="font-bold text-lg">БухКонтроль</span>
+                <span className="text-xs text-muted-foreground">Бухгалтерский контроль</span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Анализируем, прогнозируем, помогаем расти вашему бизнесу
+              Профессиональные бухгалтерские услуги для вашего бизнеса
             </p>
           </div>
 
@@ -54,19 +54,19 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Icon name="Phone" size={18} />
-                <a href="tel:+79999999999" className="hover:text-primary transition-colors">
-                  +7 (999) 999-99-99
+                <a href="tel:+79370768680" className="hover:text-primary transition-colors">
+                  +7 (937) 076-86-80
                 </a>
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Icon name="Mail" size={18} />
-                <a href="mailto:info@bizprognoz.ru" className="hover:text-primary transition-colors">
-                  info@bizprognoz.ru
+                <a href="mailto:zakaz6377@yandex.ru" className="hover:text-primary transition-colors">
+                  zakaz6377@yandex.ru
                 </a>
               </li>
               <li className="flex items-start gap-2 text-muted-foreground">
                 <Icon name="MapPin" size={18} className="mt-1" />
-                <span>г. Москва, Бизнес-центр</span>
+                <span>г. Самара, Бизнес-центр</span>
               </li>
             </ul>
           </div>
@@ -97,7 +97,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© {currentYear} План А. Все права защищены.</p>
+          <p>© {currentYear} БухКонтроль. Все права защищены.</p>
         </div>
       </div>
     </footer>
