@@ -106,13 +106,27 @@ const Contacts = () => {
                     Напишите нам в мессенджере для оперативной консультации
                   </p>
                   <div className="flex gap-3 pt-2">
-                    <Button variant="outline" size="lg" className="flex-1">
-                      <Icon name="MessageCircle" className="mr-2" />
-                      Telegram
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="flex-1"
+                      asChild
+                    >
+                      <a href="https://t.me/+79370768680" target="_blank" rel="noopener noreferrer">
+                        <Icon name="MessageCircle" className="mr-2" />
+                        Telegram
+                      </a>
                     </Button>
-                    <Button variant="outline" size="lg" className="flex-1">
-                      <Icon name="MessageCircle" className="mr-2" />
-                      MAX
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="flex-1"
+                      asChild
+                    >
+                      <a href="https://wa.me/79370768680" target="_blank" rel="noopener noreferrer">
+                        <Icon name="MessageCircle" className="mr-2" />
+                        WhatsApp
+                      </a>
                     </Button>
                   </div>
                 </CardContent>
