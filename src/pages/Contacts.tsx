@@ -32,19 +32,19 @@ const Contacts = () => {
     {
       icon: 'Phone',
       title: 'Телефон',
-      value: '+7 (999) 999-99-99',
-      link: 'tel:+79999999999'
+      value: '+7 (937) 076-86-80',
+      link: 'tel:+79370768680'
     },
     {
       icon: 'Mail',
       title: 'Email',
-      value: 'info@bizprognoz.ru',
-      link: 'mailto:info@bizprognoz.ru'
+      value: 'zakaz6377@yandex.ru',
+      link: 'mailto:zakaz6377@yandex.ru'
     },
     {
       icon: 'MapPin',
       title: 'Адрес',
-      value: 'г. Москва, Бизнес-центр',
+      value: 'г. Самара, Бизнес-центр',
       link: null
     },
     {
