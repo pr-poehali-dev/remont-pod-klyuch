@@ -8,9 +8,8 @@ const Header = () => {
 
   const navLinks = [
     { name: 'Главная', path: '/' },
-    { name: 'Калькулятор', path: '/calculator' },
-    { name: 'Тарифы', path: '/pricing' },
     { name: 'Бухгалтерия', path: '/accounting' },
+    { name: 'Калькулятор прогнозов', path: '/calculator' },
     { name: 'Контакты', path: '/contacts' },
   ];
 
@@ -20,11 +19,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center transition-transform group-hover:scale-105">
-              <Icon name="TrendingUp" className="text-white" size={24} />
+              <Icon name="Building2" className="text-white" size={24} />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl text-foreground">План А</span>
-              <span className="text-xs text-muted-foreground">Ваше будущее в цифрах</span>
+              <span className="font-bold text-xl text-foreground">Бизнес-Гарант</span>
+              <span className="text-xs text-muted-foreground">Бухгалтерский центр</span>
             </div>
           </Link>
 
@@ -42,13 +41,13 @@ const Header = () => {
 
           <div className="hidden md:flex items-center gap-4">
             <Button variant="outline" asChild>
-              <Link to="/calculator">
-                Попробовать бесплатно
-              </Link>
+              <a href="https://buh.bg63.ru" target="_blank" rel="noopener noreferrer">
+                buh.bg63.ru
+              </a>
             </Button>
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <Link to="/contacts">
-                Связаться
+                Консультация
               </Link>
             </Button>
           </div>
@@ -76,13 +75,13 @@ const Header = () => {
                 </Link>
               ))}
               <Button variant="outline" className="w-full" asChild>
-                <Link to="/calculator">
-                  Попробовать бесплатно
-                </Link>
+                <a href="https://buh.bg63.ru" target="_blank" rel="noopener noreferrer">
+                  buh.bg63.ru
+                </a>
               </Button>
               <Button className="bg-primary hover:bg-primary/90 w-full" asChild>
                 <Link to="/contacts">
-                  Связаться
+                  Консультация
                 </Link>
               </Button>
             </nav>
