@@ -80,8 +80,8 @@ const Accounting = () => {
   const advantages = [
     {
       icon: 'Award',
-      title: 'Опыт с 2004 года',
-      description: 'Более 19 лет успешной работы в сфере бухгалтерских услуг'
+      title: 'Профессионализм',
+      description: 'Команда опытных специалистов в бухгалтерском учёте'
     },
     {
       icon: 'Shield',
@@ -182,14 +182,14 @@ const Accounting = () => {
           {/* Hero Section */}
           <div className="text-center space-y-6 mb-16">
             <Badge className="bg-primary text-white text-lg px-6 py-2">
-              <Icon name="Building2" size={18} className="mr-2" />
-              ООО Бухгалтерский Центр "Бизнес-Гарант"
+              <Icon name="FileCheck" size={18} className="mr-2" />
+              БК - Бухгалтерский Контроль
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold">
               Бухгалтерское обслуживание бизнеса
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Профессиональные бухгалтерские услуги для малого и среднего бизнеса с 2004 года. 
+              Профессиональные бухгалтерские услуги для малого и среднего бизнеса. 
               Полный спектр услуг от ведения учёта до налогового консалтинга.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
@@ -200,10 +200,10 @@ const Accounting = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <a href="https://buh.bg63.ru" target="_blank" rel="noopener noreferrer">
-                  <Icon name="ExternalLink" className="mr-2" />
-                  Перейти на сайт buh.bg63.ru
-                </a>
+                <Link to="/calculator">
+                  <Icon name="LineChart" className="mr-2" />
+                  Калькулятор прогнозов
+                </Link>
               </Button>
             </div>
           </div>
@@ -332,10 +332,10 @@ const Accounting = () => {
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <a href="https://buh.bg63.ru" target="_blank" rel="noopener noreferrer">
-                      <Icon name="ExternalLink" className="mr-2" />
-                      buh.bg63.ru
-                    </a>
+                    <Link to="/calculator">
+                      <Icon name="LineChart" className="mr-2" />
+                      Калькулятор прогнозов
+                    </Link>
                   </Button>
                 </div>
               </div>

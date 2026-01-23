@@ -79,9 +79,9 @@ const Index = () => {
   const advantages = [
     {
       icon: 'Award',
-      title: 'Опыт с 2004 года',
-      value: '19+ лет',
-      description: 'на рынке бухгалтерских услуг'
+      title: 'Профессионализм',
+      value: 'Высокий',
+      description: 'квалифицированные специалисты'
     },
     {
       icon: 'Users',
@@ -159,15 +159,15 @@ const Index = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
               <Badge className="bg-primary text-white text-lg px-6 py-2">
-                <Icon name="Building2" size={18} className="mr-2" />
-                ООО Бухгалтерский Центр "Бизнес-Гарант"
+                <Icon name="FileCheck" size={18} className="mr-2" />
+                БК - Бухгалтерский Контроль
               </Badge>
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
                 Бухгалтерские услуги
                 <span className="block text-primary mt-2">для вашего бизнеса</span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Профессиональное ведение учёта, сдача отчётности и налоговый консалтинг с 2004 года. 
+                Профессиональное ведение учёта, сдача отчётности и налоговый консалтинг. 
                 Надёжный партнёр для малого и среднего бизнеса.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -392,10 +392,10 @@ const Index = () => {
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <a href="https://buh.bg63.ru" target="_blank" rel="noopener noreferrer">
-                      <Icon name="ExternalLink" className="mr-2" />
-                      Перейти на buh.bg63.ru
-                    </a>
+                    <Link to="/accounting">
+                      <Icon name="Calculator" className="mr-2" />
+                      Наши услуги
+                    </Link>
                   </Button>
                 </div>
               </CardContent>
