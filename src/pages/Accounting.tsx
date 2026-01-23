@@ -334,7 +334,7 @@ const Accounting = () => {
                   <Button size="lg" variant="outline" asChild>
                     <Link to="/calculator">
                       <Icon name="LineChart" className="mr-2" />
-                      Калькулятор прогнозов
+                      Калькулятор
                     </Link>
                   </Button>
                 </div>
