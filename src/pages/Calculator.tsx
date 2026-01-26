@@ -33,6 +33,7 @@ interface ForecastResult {
 }
 
 const Calculator = () => {
+  // VERSION: 2026-01-26-v2 - Updated risk parameters
   const [currentRevenue, setCurrentRevenue] = useState([1000000]);
   const [growthRate, setGrowthRate] = useState([10]);
   const [industry, setIndustry] = useState('retail_store');
@@ -306,6 +307,7 @@ const Calculator = () => {
               <p className="text-xl text-muted-foreground">
                 Получите прогноз с анализом рисков и сценариями развития
               </p>
+              <p className="text-xs text-muted-foreground opacity-50">v2.0 — обновлённые параметры оценки рисков</p>
             </div>
 
             <CalculatorForm
