@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -76,6 +78,35 @@ const PricingCalculator = () => {
             </p>
           </div>
 
+          {/* Agro Banner */}
+          <div className="mb-12">
+            <Card className="max-w-5xl mx-auto bg-gradient-to-br from-orange-500/10 via-amber-400/10 to-yellow-500/10 border-2 border-orange-400/50 shadow-xl animate-bounce-in animate-glow">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg animate-scale-in">
+                    <Icon name="Wheat" size={40} className="text-white" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left space-y-2">
+                    <Badge className="bg-gradient-to-r from-orange-600 to-amber-600 text-white mb-2 px-4 py-1">
+                      <Icon name="Sparkles" size={16} className="mr-2" />
+                      Специально для агросектора
+                    </Badge>
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Фермер? Есть специальный калькулятор!</h2>
+                    <p className="text-base text-gray-700">
+                      Для сельхозпроизводителей — отдельный расчёт с учётом ФГИС Зерно, Меркурий, форма 29-СХ и субсидий
+                    </p>
+                  </div>
+                  <Button size="lg" className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-lg flex-shrink-0" asChild>
+                    <Link to="/calculator">
+                      <Icon name="TrendingUp" className="mr-2" />
+                      Калькулятор для агро
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           <div className="max-w-4xl mx-auto">
             <Card>
               <CardHeader>
@@ -131,11 +162,19 @@ const PricingCalculator = () => {
 
                 <div className="space-y-3">
                   <Label htmlFor="activity" className="text-base font-semibold">Сфера деятельности</Label>
-                  <Select value={activity} onValueChange={setActivity}>
+                  <Select value={activity} onValueChange={(value) => {
+                    setActivity(value);
+                    if (value === 'agriculture') {
+                      toast.info('Для агросектора есть специальный калькулятор! Нажмите на баннер сверху', {
+                        duration: 5000,
+                      });
+                    }
+                  }}>
                     <SelectTrigger>
                       <SelectValue placeholder="Выберите сферу деятельности" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="agriculture">🌾 Сельское хозяйство</SelectItem>
                       <SelectItem value="retail">Розничная торговля</SelectItem>
                       <SelectItem value="wholesale">Оптовая торговля</SelectItem>
                       <SelectItem value="services">Услуги</SelectItem>
@@ -147,6 +186,18 @@ const PricingCalculator = () => {
                       <SelectItem value="other">Другое</SelectItem>
                     </SelectContent>
                   </Select>
+                  {activity === 'agriculture' && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start gap-3">
+                      <Icon name="Info" size={20} className="text-orange-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm">
+                        <p className="font-semibold text-orange-900 mb-1">Рекомендуем специальный калькулятор</p>
+                        <p className="text-orange-700">
+                          Для сельхозпроизводителей мы создали отдельный калькулятор с учётом ФГИС систем и субсидий. 
+                          <Link to="/calculator" className="underline font-medium ml-1">Перейти к калькулятору для агро →</Link>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
