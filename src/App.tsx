@@ -1,4 +1,4 @@
-
+// BUILD: 2026-01-26-12:50:00-FORCE-REFRESH
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +27,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/calculator" element={<PricingCalculator />} />
+          <Route path="/agro-calculator" element={<Calculator />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/forecast-form" element={<ForecastForm />} />

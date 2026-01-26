@@ -1,3 +1,4 @@
+// CACHE BUSTER: 2026-01-26-12:50:00-REBUILD-v3
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -33,12 +34,15 @@ interface ForecastResult {
 }
 
 const Calculator = () => {
+  // VERSION: 2026-01-26-v2 - Updated risk parameters
   const [currentRevenue, setCurrentRevenue] = useState([1000000]);
   const [growthRate, setGrowthRate] = useState([10]);
   const [industry, setIndustry] = useState('retail_store');
   const [employees, setEmployees] = useState([10]);
-  const [marketVolatility, setMarketVolatility] = useState([50]);
-  const [competition, setCompetition] = useState([50]);
+  const [debtLoad, setDebtLoad] = useState('0');
+  const [supplierDependency, setSupplierDependency] = useState([50]);
+  const [seasonality, setSeasonality] = useState([30]);
+  const [revenueDiversification, setRevenueDiversification] = useState([50]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -109,12 +113,15 @@ const Calculator = () => {
     const multiplier = industryMultipliers[industry] || 1.0;
     const employeeBonus = Math.min(employees[0] / 100, 0.2);
 
-    const volatilityRisk = marketVolatility[0];
-    const competitionRisk = competition[0];
+    // Новые параметры оценки рисков
+    const debtRisk = Math.min(100, (Number(debtLoad) / base) * 100); // Долговая нагрузка относительно выручки
+    const supplierRisk = supplierDependency[0];
+    const seasonalityRisk = seasonality[0];
+    const diversificationRisk = 100 - revenueDiversification[0]; // Инвертируем: низкая диверсификация = высокий риск
     const industryRisk = industryRisks[industry] || 50;
     const scaleRisk = Math.max(30, 70 - (employees[0] / 10));
 
-    const overallRisk = Math.round((volatilityRisk + competitionRisk + industryRisk + scaleRisk) / 4);
+    const overallRisk = Math.round((debtRisk + supplierRisk + seasonalityRisk + diversificationRisk + industryRisk + scaleRisk) / 6);
 
     const riskFactor = 1 - (overallRisk / 200);
 
@@ -127,21 +134,39 @@ const Calculator = () => {
 
     const recommendations: Recommendation[] = [];
 
-    if (volatilityRisk > 70) {
+    if (debtRisk > 50) {
       recommendations.push({
-        title: 'Диверсифицируйте источники дохода',
-        description: 'Высокая волатильность рынка требует распределения рисков. Рассмотрите дополнительные каналы продаж или новые продуктовые линейки.',
+        title: 'Снизьте долговую нагрузку',
+        description: 'Высокий уровень долга создает финансовые риски. Рассмотрите реструктуризацию кредитов или досрочное погашение части долгов.',
         priority: 'high',
-        icon: 'Shield'
+        icon: 'AlertTriangle'
       });
     }
 
-    if (competitionRisk > 70) {
+    if (supplierRisk > 70) {
       recommendations.push({
-        title: 'Усильте уникальное торговое предложение',
-        description: 'Высокая конкуренция требует четкого позиционирования. Выделите ключевые отличия вашего продукта и усильте маркетинг.',
+        title: 'Диверсифицируйте поставщиков',
+        description: 'Сильная зависимость от 1-2 поставщиков — это риск. Найдите альтернативных партнеров для критичных позиций.',
         priority: 'high',
-        icon: 'Target'
+        icon: 'Users'
+      });
+    }
+
+    if (seasonalityRisk > 70) {
+      recommendations.push({
+        title: 'Сгладьте сезонность бизнеса',
+        description: 'Сильные колебания выручки в течение года создают кассовые разрывы. Добавьте услуги или продукты для несезонных периодов.',
+        priority: 'high',
+        icon: 'TrendingUp'
+      });
+    }
+
+    if (diversificationRisk > 70) {
+      recommendations.push({
+        title: 'Расширьте источники дохода',
+        description: 'Зависимость от 1-2 продуктов или клиентов — критический риск. Разработайте новые направления для стабильности бизнеса.',
+        priority: 'high',
+        icon: 'Shield'
       });
     }
 
@@ -181,10 +206,10 @@ const Calculator = () => {
       });
     }
 
-    if (volatilityRisk < 30 && competitionRisk < 30) {
+    if (debtRisk < 20 && diversificationRisk < 30 && supplierRisk < 30) {
       recommendations.push({
         title: 'Агрессивное масштабирование',
-        description: 'Благоприятные рыночные условия и низкая конкуренция создают окно возможностей. Увеличьте инвестиции в захват рынка.',
+        description: 'Низкие риски и хорошая диверсификация создают окно возможностей. Увеличьте инвестиции в рост и захват рынка.',
         priority: 'high',
         icon: 'Rocket'
       });
@@ -228,16 +253,28 @@ const Calculator = () => {
         overall: overallRisk,
         categories: [
           {
-            name: 'Волатильность рынка',
-            level: volatilityRisk,
-            description: volatilityRisk > 70 ? 'Высокая нестабильность' : volatilityRisk > 40 ? 'Умеренные колебания' : 'Стабильный рынок',
-            icon: 'TrendingUp'
+            name: 'Долговая нагрузка',
+            level: Math.round(debtRisk),
+            description: debtRisk > 70 ? 'Критическая нагрузка' : debtRisk > 40 ? 'Умеренная нагрузка' : 'Низкая нагрузка',
+            icon: 'DollarSign'
           },
           {
-            name: 'Конкуренция',
-            level: competitionRisk,
-            description: competitionRisk > 70 ? 'Высокая конкуренция' : competitionRisk > 40 ? 'Средний уровень' : 'Низкая конкуренция',
-            icon: 'Users'
+            name: 'Зависимость от поставщиков',
+            level: supplierRisk,
+            description: supplierRisk > 70 ? 'Высокая зависимость' : supplierRisk > 40 ? 'Умеренная' : 'Низкая зависимость',
+            icon: 'Truck'
+          },
+          {
+            name: 'Сезонность бизнеса',
+            level: seasonalityRisk,
+            description: seasonalityRisk > 70 ? 'Сильная сезонность' : seasonalityRisk > 40 ? 'Умеренная' : 'Стабильный доход',
+            icon: 'Calendar'
+          },
+          {
+            name: 'Диверсификация доходов',
+            level: diversificationRisk,
+            description: diversificationRisk > 70 ? 'Низкая диверсификация' : diversificationRisk > 40 ? 'Средняя' : 'Высокая диверсификация',
+            icon: 'Shield'
           },
           {
             name: 'Отраслевые риски',
@@ -249,7 +286,7 @@ const Calculator = () => {
             name: 'Масштаб бизнеса',
             level: scaleRisk,
             description: employees[0] < 10 ? 'Малый бизнес - высокий риск' : employees[0] < 50 ? 'Средний бизнес' : 'Крупный бизнес - низкий риск',
-            icon: 'Scale'
+            icon: 'Briefcase'
           }
         ]
       },
@@ -266,11 +303,18 @@ const Calculator = () => {
       <main className="pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto space-y-8">
+            {/* ТЕСТОВЫЙ БАННЕР - УДАЛИТЬ ПОСЛЕ ПРОВЕРКИ */}
+            <div className="bg-green-500 text-white p-6 rounded-lg text-center">
+              <h2 className="text-3xl font-bold">✅ НОВАЯ ВЕРСИЯ 3.0 ЗАГРУЖЕНА</h2>
+              <p className="text-lg mt-2">26 января 2026, 12:45 — Исправлена ошибка 502</p>
+            </div>
+            
             <div className="text-center space-y-4">
               <h1 className="text-4xl md:text-5xl font-bold">Калькулятор прогнозов</h1>
               <p className="text-xl text-muted-foreground">
                 Получите прогноз с анализом рисков и сценариями развития
               </p>
+              <p className="text-xs text-muted-foreground opacity-50">v2.0 — обновлённые параметры оценки рисков</p>
             </div>
 
             <CalculatorForm
@@ -282,10 +326,14 @@ const Calculator = () => {
               setIndustry={setIndustry}
               employees={employees}
               setEmployees={setEmployees}
-              marketVolatility={marketVolatility}
-              setMarketVolatility={setMarketVolatility}
-              competition={competition}
-              setCompetition={setCompetition}
+              debtLoad={debtLoad}
+              setDebtLoad={setDebtLoad}
+              supplierDependency={supplierDependency}
+              setSupplierDependency={setSupplierDependency}
+              seasonality={seasonality}
+              setSeasonality={setSeasonality}
+              revenueDiversification={revenueDiversification}
+              setRevenueDiversification={setRevenueDiversification}
               name={name}
               setName={setName}
               email={email}

@@ -14,10 +14,14 @@ interface CalculatorFormProps {
   setIndustry: (value: string) => void;
   employees: number[];
   setEmployees: (value: number[]) => void;
-  marketVolatility: number[];
-  setMarketVolatility: (value: number[]) => void;
-  competition: number[];
-  setCompetition: (value: number[]) => void;
+  debtLoad: string;
+  setDebtLoad: (value: string) => void;
+  supplierDependency: number[];
+  setSupplierDependency: (value: number[]) => void;
+  seasonality: number[];
+  setSeasonality: (value: number[]) => void;
+  revenueDiversification: number[];
+  setRevenueDiversification: (value: number[]) => void;
   name: string;
   setName: (value: string) => void;
   email: string;
@@ -44,10 +48,14 @@ const CalculatorForm = ({
   setIndustry,
   employees,
   setEmployees,
-  marketVolatility,
-  setMarketVolatility,
-  competition,
-  setCompetition,
+  debtLoad,
+  setDebtLoad,
+  supplierDependency,
+  setSupplierDependency,
+  seasonality,
+  setSeasonality,
+  revenueDiversification,
+  setRevenueDiversification,
   name,
   setName,
   email,
@@ -82,10 +90,14 @@ const CalculatorForm = ({
         />
 
         <RiskParametersSection
-          marketVolatility={marketVolatility}
-          setMarketVolatility={setMarketVolatility}
-          competition={competition}
-          setCompetition={setCompetition}
+          debtLoad={debtLoad}
+          setDebtLoad={setDebtLoad}
+          supplierDependency={supplierDependency}
+          setSupplierDependency={setSupplierDependency}
+          seasonality={seasonality}
+          setSeasonality={setSeasonality}
+          revenueDiversification={revenueDiversification}
+          setRevenueDiversification={setRevenueDiversification}
         />
 
         <ContactInformationSection

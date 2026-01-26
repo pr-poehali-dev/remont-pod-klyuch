@@ -30,6 +30,7 @@ export function Combobox({
   className,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
+  const [search, setSearch] = React.useState("")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -48,30 +49,35 @@ export function Combobox({
         <Command>
           <CommandInput 
             placeholder={searchPlaceholder} 
-            value={value}
-            onValueChange={onValueChange}
+            value={search}
+            onValueChange={setSearch}
           />
           <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    onValueChange(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
+              {options
+                .filter((option) => 
+                  option.label.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((option) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.value}
+                    onSelect={(currentValue) => {
+                      onValueChange(currentValue)
+                      setOpen(false)
+                      setSearch("")
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === option.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {option.label}
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
         </Command>
