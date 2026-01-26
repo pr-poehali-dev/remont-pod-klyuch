@@ -9,6 +9,18 @@ import Icon from '@/components/ui/icon';
 const Index = () => {
   const services = [
     {
+      icon: 'Wheat',
+      title: 'Учёт для агросектора',
+      description: 'Специализированное бухгалтерское обслуживание сельхозпроизводителей и фермеров',
+      features: [
+        'ФГИС Зерно и Меркурий',
+        'Отчётность по субсидиям',
+        'Форма 29-СХ в Росстат',
+        'Оптимизация налогов для ЕСХН'
+      ],
+      badge: 'Специализация'
+    },
+    {
       icon: 'Calculator',
       title: 'Бухгалтерское обслуживание',
       description: 'Полное ведение бухгалтерского и налогового учёта для вашего бизнеса',
@@ -53,17 +65,6 @@ const Index = () => {
       ]
     },
     {
-      icon: 'Building',
-      title: 'Регистрация бизнеса',
-      description: 'Открытие ООО, ИП и внесение изменений',
-      features: [
-        'Регистрация ООО и ИП',
-        'Изменение ОКВЭД',
-        'Получение лицензий',
-        'Ликвидация бизнеса'
-      ]
-    },
-    {
       icon: 'Scale',
       title: 'Аудит и проверки',
       description: 'Независимая проверка учёта и отчётности',
@@ -105,46 +106,46 @@ const Index = () => {
 
   const pricingHighlights = [
     {
-      name: 'Нулевая отчётность',
-      price: 'от 1 500 ₽',
+      name: 'АГРО',
+      price: '4 990 ₽',
       period: 'в месяц',
-      icon: 'FileCheck',
-      description: 'Для компаний без операций'
-    },
-    {
-      name: 'Базовый',
-      price: 'от 5 000 ₽',
-      period: 'в месяц',
-      icon: 'Briefcase',
-      description: 'Для малого бизнеса',
+      icon: 'Wheat',
+      description: 'Для сельхозпроизводителей',
       badge: 'Популярный'
     },
     {
-      name: 'Стандарт',
-      price: 'от 15 000 ₽',
+      name: 'СТАРТ',
+      price: '2 990 ₽',
+      period: 'в месяц',
+      icon: 'Briefcase',
+      description: 'Для ИП и малого бизнеса'
+    },
+    {
+      name: 'БИЗНЕС',
+      price: '5 990 ₽',
       period: 'в месяц',
       icon: 'Building2',
-      description: 'Для среднего бизнеса'
+      description: 'Для растущих компаний'
     }
   ];
 
   const testimonials = [
     {
-      name: 'Екатерина Смирнова',
-      position: 'Директор ООО "ТехноПро"',
-      text: 'Работаем уже 3 года. Отличный сервис, всегда на связи, все отчёты вовремя. Очень довольна профессионализмом команды!',
+      name: 'Сергей Иванович',
+      position: 'КФХ "Золотое поле", Ставропольский край',
+      text: 'Наконец-то нашёл бухгалтера, который разбирается в ФГИС Зерно! Все субсидии оформили правильно, отчёты сдали вовремя. Рекомендую фермерам!',
       rating: 5
     },
     {
-      name: 'Игорь Петров',
-      position: 'ИП Петров И.А.',
-      text: 'Перешёл на аутсорсинг и не пожалел. Экономлю время и деньги, а качество работы на высоте. Рекомендую всем предпринимателям!',
+      name: 'Наталья Петрова',
+      position: 'ИП Глава КФХ, Краснодарский край',
+      text: 'Работаю с БК уже 2 года. Помогли разобраться с Меркурием и отчётностью по субсидиям. Очень довольна! Знают специфику сельского хозяйства.',
       rating: 5
     },
     {
-      name: 'Ольга Новикова',
-      position: 'Учредитель сети магазинов "Продукты+"',
-      text: 'Настоящие профессионалы! Помогли оптимизировать налоги и сопроводили проверку — всё прошло гладко. Спасибо за работу!',
+      name: 'Дмитрий Соколов',
+      position: 'ООО "АгроПродукт"',
+      text: 'Перешли на аутсорсинг — и не пожалели. Тариф АГРО включает всё что нужно: ФГИС, 29-СХ, субсидии. Экономим на штатном бухгалтере.',
       rating: 5
     }
   ];
@@ -159,16 +160,16 @@ const Index = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
               <Badge className="bg-primary text-white text-lg px-6 py-2">
-                <Icon name="FileCheck" size={18} className="mr-2" />
-                БК - Бухгалтерский Контроль
+                <Icon name="Wheat" size={18} className="mr-2" />
+                Специализация: Агросектор
               </Badge>
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                Бухгалтерские услуги
-                <span className="block text-primary mt-2">для вашего бизнеса</span>
+                Бухгалтерия для фермеров
+                <span className="block text-primary mt-2">и сельхозпроизводителей</span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Профессиональное ведение учёта, сдача отчётности и налоговый консалтинг. 
-                Надёжный партнёр для малого и среднего бизнеса.
+                ФГИС Зерно, Меркурий, субсидии, форма 29-СХ. Знаем специфику агробизнеса. 
+                Помогаем фермерам экономить время и деньги на учёте.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="text-lg px-8" asChild>
@@ -219,8 +220,11 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.map((service, index) => (
-                <Card key={index} className="hover:shadow-lg transition-all hover:border-primary">
+                <Card key={index} className={`hover:shadow-lg transition-all hover:border-primary ${service.badge ? 'border-2 border-primary' : ''}`}>
                   <CardContent className="p-8">
+                    {service.badge && (
+                      <Badge className="mb-4 bg-primary text-white">{service.badge}</Badge>
+                    )}
                     <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                       <Icon name={service.icon as any} size={28} className="text-primary" />
                     </div>
