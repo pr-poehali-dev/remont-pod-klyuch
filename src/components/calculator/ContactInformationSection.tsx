@@ -1,6 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Combobox } from '@/components/ui/combobox';
 import Icon from '@/components/ui/icon';
 
 interface ContactInformationSectionProps {
@@ -27,7 +28,7 @@ const popularCities = [
   'Краснодар', 'Саратов', 'Тюмень', 'Тольятти', 'Ижевск',
   'Барнаул', 'Ульяновск', 'Иркутск', 'Хабаровск', 'Ярославль',
   'Владивосток', 'Махачкала', 'Томск', 'Оренбург', 'Кемерово'
-];
+].map(city => ({ value: city, label: city }));
 
 const ContactInformationSection = ({
   name,
@@ -77,19 +78,14 @@ const ContactInformationSection = ({
 
         <div className="space-y-2">
           <Label htmlFor="city">Город <span className="text-red-500">*</span></Label>
-          <Input
-            id="city"
-            list="cities"
-            placeholder="Москва, Санкт-Петербург..."
+          <Combobox
+            options={popularCities}
             value={city}
-            onChange={(e) => setCity(e.target.value)}
-            required
+            onValueChange={setCity}
+            placeholder="Выберите или введите город"
+            searchPlaceholder="Москва, Санкт-Петербург..."
+            emptyText="Город не найден — продолжайте ввод"
           />
-          <datalist id="cities">
-            {popularCities.map((cityName) => (
-              <option key={cityName} value={cityName} />
-            ))}
-          </datalist>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

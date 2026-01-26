@@ -107,9 +107,9 @@ const Accounting = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link to="/agro-calculator">
+                <Link to="/calculator">
                   <Icon name="LineChart" className="mr-2" />
-                  Калькулятор для агро
+                  Калькулятор
                 </Link>
               </Button>
             </div>

@@ -98,7 +98,7 @@ const PricingCalculator = () => {
                     </p>
                   </div>
                   <Button size="lg" className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-lg flex-shrink-0" asChild>
-                    <Link to="/agro-calculator">
+                    <Link to="/calculator">
                       <Icon name="TrendingUp" className="mr-2" />
                       Калькулятор для агро
                     </Link>
@@ -210,7 +210,7 @@ const PricingCalculator = () => {
                         <p className="font-semibold text-orange-900 mb-1">Рекомендуем специальный калькулятор</p>
                         <p className="text-orange-700">
                           Для сельхозпроизводителей мы создали отдельный калькулятор с учётом ФГИС систем и субсидий. 
-                          <Link to="/agro-calculator" className="underline font-medium ml-1">Перейти к калькулятору для агро →</Link>
+                          <Link to="/calculator" className="underline font-medium ml-1">Перейти к калькулятору для агро →</Link>
                         </p>
                       </div>
                     </div>
