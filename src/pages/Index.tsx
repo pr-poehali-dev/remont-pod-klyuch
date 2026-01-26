@@ -288,7 +288,7 @@ const Index = () => {
                     </div>
                   </div>
                   <Button size="lg" className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-lg flex-shrink-0 px-8 py-6 text-lg" asChild>
-                    <Link to="/calculator">
+                    <Link to="/agro-calculator">
                       <Icon name="TrendingUp" className="mr-2" size={22} />
                       Рассчитать прогноз
                     </Link>

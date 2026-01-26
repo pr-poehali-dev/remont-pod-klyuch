@@ -130,7 +130,7 @@ const AgroCaseStudies = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8" asChild>
-                <Link to="/calculator">
+                <Link to="/agro-calculator">
                   <Icon name="Calculator" className="mr-2" size={20} />
                   Калькулятор для агро
                 </Link>
