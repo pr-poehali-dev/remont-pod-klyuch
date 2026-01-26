@@ -37,6 +37,7 @@ const PricingCalculator = () => {
     else if (orgForm === 'nko') basePrice = 10000;
 
     if (taxSystem === 'usn') basePrice += 0;
+    else if (taxSystem === 'eshn') basePrice += 3500;
     else if (taxSystem === 'osno') basePrice += 5000;
     else if (taxSystem === 'envd') basePrice += 2000;
     else if (taxSystem === 'patent') basePrice += 1500;
@@ -146,6 +147,10 @@ const PricingCalculator = () => {
                       <Label htmlFor="usn" className="cursor-pointer">УСН (Упрощенная)</Label>
                     </div>
                     <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="eshn" id="eshn" />
+                      <Label htmlFor="eshn" className="cursor-pointer">🌾 ЕСХН (Единый сельхозналог)</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
                       <RadioGroupItem value="osno" id="osno" />
                       <Label htmlFor="osno" className="cursor-pointer">ОСНО (Общая)</Label>
                     </div>
@@ -158,6 +163,18 @@ const PricingCalculator = () => {
                       <Label htmlFor="patent" className="cursor-pointer">Патент</Label>
                     </div>
                   </RadioGroup>
+                  {taxSystem === 'eshn' && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+                      <Icon name="Info" size={20} className="text-green-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm">
+                        <p className="font-semibold text-green-900 mb-1">ЕСХН для сельхозпроизводителей</p>
+                        <p className="text-green-700">
+                          Применяется если 70%+ доходов от сельхозпроизводства. Ставка 6% с разницы доходов и расходов, освобождение от НДС. 
+                          Включает ФГИС Зерно, Меркурий и форму 29-СХ.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
