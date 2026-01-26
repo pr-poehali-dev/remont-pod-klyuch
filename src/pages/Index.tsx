@@ -253,6 +253,52 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Calculator Banner for Farmers */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <Card className="max-w-5xl mx-auto bg-gradient-to-br from-accent/10 via-primary/5 to-accent/5 border-2 border-accent/20">
+              <CardContent className="p-10">
+                <div className="flex flex-col md:flex-row items-center gap-8">
+                  <div className="w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <Icon name="Calculator" size={40} className="text-accent" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left space-y-3">
+                    <Badge className="bg-accent text-white mb-2">
+                      <Icon name="Wheat" size={16} className="mr-2" />
+                      Для фермеров и КФХ
+                    </Badge>
+                    <h2 className="text-3xl font-bold">Калькулятор прогноза для агробизнеса</h2>
+                    <p className="text-lg text-muted-foreground">
+                      Рассчитайте финансовый прогноз вашего хозяйства на месяц, год и 5 лет. 
+                      Учитываем специфику растениеводства, животноводства и смешанного сельхозпроизводства.
+                    </p>
+                    <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Icon name="Check" size={18} className="text-accent" />
+                        <span>Анализ рисков отрасли</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Icon name="Check" size={18} className="text-accent" />
+                        <span>Оценка субсидий</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Icon name="Check" size={18} className="text-accent" />
+                        <span>Бесплатно</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button size="lg" className="bg-accent hover:bg-accent/90 flex-shrink-0" asChild>
+                    <Link to="/calculator">
+                      <Icon name="TrendingUp" className="mr-2" />
+                      Рассчитать прогноз
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
         {/* Pricing Preview */}
         <section className="py-20 bg-secondary/30">
           <div className="container mx-auto px-4">
