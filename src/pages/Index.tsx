@@ -256,10 +256,10 @@ const Index = () => {
         {/* Calculator Banner for Farmers */}
         <section className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
           <div className="container mx-auto px-4">
-            <Card className="max-w-5xl mx-auto bg-gradient-to-br from-orange-500/10 via-amber-400/10 to-yellow-500/10 border-2 border-orange-400/50 shadow-xl">
+            <Card className="max-w-5xl mx-auto bg-gradient-to-br from-orange-500/10 via-amber-400/10 to-yellow-500/10 border-2 border-orange-400/50 shadow-xl animate-bounce-in animate-glow">
               <CardContent className="p-10">
                 <div className="flex flex-col md:flex-row items-center gap-8">
-                  <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg animate-scale-in">
                     <Icon name="Calculator" size={48} className="text-white" />
                   </div>
                   <div className="flex-1 text-center md:text-left space-y-3">
