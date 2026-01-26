@@ -14,6 +14,8 @@ import Contacts from "./pages/Contacts";
 import ForecastForm from "./pages/ForecastForm";
 import Accounting from "./pages/Accounting";
 import Privacy from "./pages/Privacy";
+import TelegramTest from "./pages/TelegramTest";
+import TelegramCallback from "./pages/TelegramCallback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/forecast-form" element={<ForecastForm />} />
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/telegram-test" element={<TelegramTest />} />
+          <Route path="/auth/telegram/callback" element={<TelegramCallback />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
