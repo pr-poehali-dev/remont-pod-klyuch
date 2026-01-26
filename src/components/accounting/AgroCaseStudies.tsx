@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
@@ -113,34 +111,6 @@ const AgroCaseStudies = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="text-center mt-12">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <div className="bg-gradient-to-r from-orange-500 to-amber-600 text-white p-8 rounded-2xl shadow-2xl">
-            <h3 className="text-2xl md:text-3xl font-bold mb-3">Хотите такие же результаты?</h3>
-            <p className="text-orange-50 text-lg mb-6">
-              Получите бесплатную консультацию по бухгалтерии для вашего сельхозбизнеса
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-orange-600 hover:bg-orange-50 shadow-lg text-lg px-8" asChild>
-                <Link to="/contacts">
-                  <Icon name="Phone" className="mr-2" size={20} />
-                  Получить консультацию
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8" asChild>
-                <Link to="/calculator">
-                  <Icon name="Calculator" className="mr-2" size={20} />
-                  Калькулятор для агро
-                </Link>
-              </Button>
-            </div>
-          </div>
-          <p className="text-sm text-gray-600">
-            💬 Работаем с фермерами из всех регионов России • 📞 Бесплатная консультация • ⚡ Быстрый старт за 3 дня
-          </p>
-        </div>
       </div>
     </div>
   );
