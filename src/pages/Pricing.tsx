@@ -34,7 +34,110 @@ const Pricing = () => {
     const phone = '79277486868';
     return `https://qr.nspk.ru/AS10003TMQCB68M0AJDV90NP9EMCR04C?type=01&bank=100000000111&sum=${amount}00&cur=RUB&payeeId=${phone}&lastName=Сбербанк&crc=9F55`;
   }, [selectedPlan]);
-  const plans: never[] = [];
+  const plans = [
+    {
+      name: 'АГРО',
+      price: '4 990',
+      period: 'в месяц',
+      description: 'Для сельхозпроизводителей и фермеров',
+      badge: 'Популярный',
+      features: [
+        { text: 'ФГИС Зерно', included: true },
+        { text: 'ФГИС Меркурий', included: true },
+        { text: 'Отчёт в Росстат по форме 29-СХ', included: true },
+        { text: 'Отчётность по субсидиям', included: true },
+        { text: 'Единый налоговый счёт (ЕНС)', included: true },
+        { text: 'Расчёт заработной платы', included: true },
+        { text: 'Финансовый прогноз на год', included: true },
+        { text: 'Оптимизация налогов', included: true },
+        { text: 'Консультации агронома', included: false }
+      ],
+      cta: 'Оплатить',
+      ctaLink: '/forecast-form',
+      variant: 'default' as const,
+      isPaid: true
+    },
+    {
+      name: 'СТАРТ',
+      price: '2 990',
+      period: 'в месяц',
+      description: 'Для ИП и малого бизнеса',
+      features: [
+        { text: 'Единый налоговый счёт (ЕНС)', included: true },
+        { text: 'Декларация по УСН', included: true },
+        { text: 'Книга доходов и расходов', included: true },
+        { text: 'Финансовый прогноз на год', included: true },
+        { text: 'Расчёт зарплаты (до 5 чел)', included: false },
+        { text: 'Помощь при проверках', included: false },
+        { text: 'ФГИС Зерно', included: false },
+        { text: 'ФГИС Меркурий', included: false }
+      ],
+      cta: 'Оплатить',
+      ctaLink: '/forecast-form',
+      variant: 'outline' as const,
+      isPaid: true
+    },
+    {
+      name: 'БИЗНЕС',
+      price: '5 990',
+      period: 'в месяц',
+      description: 'Для растущих компаний',
+      features: [
+        { text: 'Всё из тарифа СТАРТ', included: true },
+        { text: 'Расчёт зарплаты (до 15 чел)', included: true },
+        { text: 'Отчётность в ПФР, ФСС', included: true },
+        { text: 'Помощь при проверках', included: true },
+        { text: 'Оптимизация налогов', included: true },
+        { text: 'Управленческий учёт', included: false },
+        { text: 'ФГИС Зерно', included: false },
+        { text: 'ФГИС Меркурий', included: false }
+      ],
+      cta: 'Оплатить',
+      ctaLink: '/forecast-form',
+      variant: 'outline' as const,
+      isPaid: true
+    },
+    {
+      name: 'ПРОФИ',
+      price: '9 990',
+      period: 'в месяц',
+      description: 'Для крупного бизнеса',
+      features: [
+        { text: 'Всё из тарифа БИЗНЕС', included: true },
+        { text: 'Расчёт зарплаты (безлимит)', included: true },
+        { text: 'Управленческий учёт', included: true },
+        { text: 'Бюджетирование', included: true },
+        { text: 'Финансовая аналитика', included: true },
+        { text: 'Личный бухгалтер', included: true },
+        { text: 'ФГИС Зерно', included: false },
+        { text: 'ФГИС Меркурий', included: false }
+      ],
+      cta: 'Оплатить',
+      ctaLink: '/forecast-form',
+      variant: 'outline' as const,
+      isPaid: true
+    },
+    {
+      name: 'ТЕСТ-ДРАЙВ',
+      price: '0',
+      period: '14 дней бесплатно',
+      description: 'Попробуйте перед покупкой',
+      features: [
+        { text: 'Прогноз на 3 месяца', included: true },
+        { text: 'Базовая отчётность', included: true },
+        { text: 'Техподдержка', included: true },
+        { text: 'Расчёт зарплаты', included: false },
+        { text: 'Оптимизация налогов', included: false },
+        { text: 'ФГИС Зерно', included: false },
+        { text: 'ФГИС Меркурий', included: false },
+        { text: 'Помощь при проверках', included: false }
+      ],
+      cta: 'Начать бесплатно',
+      ctaLink: '/forecast-form',
+      variant: 'outline' as const,
+      isPaid: false
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-background">
