@@ -302,6 +302,12 @@ const Calculator = () => {
       <main className="pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto space-y-8">
+            {/* ТЕСТОВЫЙ БАННЕР - УДАЛИТЬ ПОСЛЕ ПРОВЕРКИ */}
+            <div className="bg-green-500 text-white p-6 rounded-lg text-center">
+              <h2 className="text-3xl font-bold">✅ НОВАЯ ВЕРСИЯ 3.0 ЗАГРУЖЕНА</h2>
+              <p className="text-lg mt-2">26 января 2026, 12:45 — Исправлена ошибка 502</p>
+            </div>
+            
             <div className="text-center space-y-4">
               <h1 className="text-4xl md:text-5xl font-bold">Калькулятор прогнозов</h1>
               <p className="text-xl text-muted-foreground">
