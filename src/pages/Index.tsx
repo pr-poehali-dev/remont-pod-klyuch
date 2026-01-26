@@ -107,7 +107,7 @@ const Index = () => {
   const pricingHighlights = [
     {
       name: 'АГРО',
-      price: '4 990 ₽',
+      price: 'от 4 990 ₽',
       period: 'в месяц',
       icon: 'Wheat',
       description: 'Для сельхозпроизводителей',
@@ -115,14 +115,14 @@ const Index = () => {
     },
     {
       name: 'СТАРТ',
-      price: '2 990 ₽',
+      price: 'от 2 990 ₽',
       period: 'в месяц',
       icon: 'Briefcase',
       description: 'Для ИП и малого бизнеса'
     },
     {
       name: 'БИЗНЕС',
-      price: '5 990 ₽',
+      price: 'от 5 990 ₽',
       period: 'в месяц',
       icon: 'Building2',
       description: 'Для растущих компаний'

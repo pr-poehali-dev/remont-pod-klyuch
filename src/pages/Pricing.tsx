@@ -37,7 +37,7 @@ const Pricing = () => {
   const plans = [
     {
       name: 'АГРО',
-      price: '4 990',
+      price: 'от 4 990',
       period: 'в месяц',
       description: 'Для сельхозпроизводителей и фермеров',
       badge: 'Популярный',
@@ -59,7 +59,7 @@ const Pricing = () => {
     },
     {
       name: 'СТАРТ',
-      price: '2 990',
+      price: 'от 2 990',
       period: 'в месяц',
       description: 'Для ИП и малого бизнеса',
       features: [
@@ -79,7 +79,7 @@ const Pricing = () => {
     },
     {
       name: 'БИЗНЕС',
-      price: '5 990',
+      price: 'от 5 990',
       period: 'в месяц',
       description: 'Для растущих компаний',
       features: [
@@ -99,7 +99,7 @@ const Pricing = () => {
     },
     {
       name: 'ПРОФИ',
-      price: '9 990',
+      price: 'от 9 990',
       period: 'в месяц',
       description: 'Для крупного бизнеса',
       features: [

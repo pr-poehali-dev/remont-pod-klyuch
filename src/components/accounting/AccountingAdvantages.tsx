@@ -41,7 +41,7 @@ const AccountingAdvantages = () => {
   const pricingPlans = [
     {
       name: 'АГРО',
-      price: '4 990',
+      price: 'от 4 990',
       period: 'в месяц',
       description: 'Для сельхозпроизводителей и фермеров',
       features: [
@@ -58,7 +58,7 @@ const AccountingAdvantages = () => {
     },
     {
       name: 'СТАРТ',
-      price: '2 990',
+      price: 'от 2 990',
       period: 'в месяц',
       description: 'Для ИП и малого бизнеса',
       features: [
@@ -73,7 +73,7 @@ const AccountingAdvantages = () => {
     },
     {
       name: 'БИЗНЕС',
-      price: '5 990',
+      price: 'от 5 990',
       period: 'в месяц',
       description: 'Для растущих компаний',
       features: [
@@ -88,7 +88,7 @@ const AccountingAdvantages = () => {
     },
     {
       name: 'ПРОФИ',
-      price: '9 990',
+      price: 'от 9 990',
       period: 'в месяц',
       description: 'Для крупного бизнеса',
       features: [
