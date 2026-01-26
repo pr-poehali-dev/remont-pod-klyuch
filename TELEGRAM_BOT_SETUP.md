@@ -15,7 +15,7 @@
    - `JWT_SECRET` ✅ (заполнен)
    - `TELEGRAM_BOT_TOKEN` ⚠️ (нужно получить от @BotFather)
    - `TELEGRAM_BOT_USERNAME` ⚠️ (username бота без @)
-   - `SITE_URL` ✅ (https://remont-pod-klyuch.poehali.dev)
+   - `SITE_URL` ✅ (http://bk-63.ru)
    - `TELEGRAM_WEBHOOK_SECRET` ⚠️ (любая случайная строка)
 
 4. ✅ Тестовая страница создана: `/telegram-test`
@@ -74,7 +74,7 @@ https://api.telegram.org/bot1234567890:ABCdefGHI_jklmnop/setWebhook?url=https://
 
 ### 1. Откройте тестовую страницу
 
-Перейдите на: `https://remont-pod-klyuch.poehali.dev/telegram-test`
+Перейдите на: `http://bk-63.ru/telegram-test`
 
 ### 2. Нажмите кнопку "Войти через Telegram"
 
