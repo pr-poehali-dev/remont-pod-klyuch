@@ -24,7 +24,7 @@ import telebot
 
 def get_bot_token() -> str:
     """Get Telegram bot token."""
-    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "7161037044:AAGAm-7451mXl_Z-LO1RzFNY7ztYid7vzv4")
     if not token:
         raise ValueError("TELEGRAM_BOT_TOKEN not configured")
     return token
