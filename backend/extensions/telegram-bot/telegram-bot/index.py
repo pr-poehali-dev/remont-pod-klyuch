@@ -162,15 +162,19 @@ def process_webhook(body: dict) -> dict:
 
     try:
         if text.startswith("/start"):
+            print(f"[DEBUG] Processing /start command for chat_id={chat_id}")
             parts = text.split(" ", 1)
             if len(parts) > 1 and parts[1] == "web_auth":
+                print(f"[DEBUG] Handling web_auth")
                 handle_web_auth(chat_id, user)
             else:
+                print(f"[DEBUG] Handling regular start")
                 handle_start(chat_id)
+            print(f"[DEBUG] Message sent successfully")
     except telebot.apihelper.ApiTelegramException as e:
-        print(f"Telegram API error: {e}")
+        print(f"[ERROR] Telegram API error: {e}")
     except Exception as e:
-        print(f"Error processing webhook: {e}")
+        print(f"[ERROR] Error processing webhook: {e}")
 
     return {"statusCode": 200, "body": json.dumps({"ok": True})}
 
