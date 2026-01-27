@@ -300,6 +300,7 @@ def handle_test(body: dict) -> dict:
 
 def handler(event: dict, context) -> dict:
     """Main entry point."""
+    print(f"[DEBUG] Received event: {json.dumps(event)}")
     method = event.get("httpMethod", "POST")
 
     if method == "OPTIONS":
@@ -328,14 +329,6 @@ def handler(event: dict, context) -> dict:
             return cors_response(400, {"error": f"Unknown action: {action}"})
 
     # No action — handle Telegram webhook
-    headers = event.get("headers", {})
-    headers_lower = {k.lower(): v for k, v in headers.items()}
-    webhook_secret = os.environ.get("TELEGRAM_WEBHOOK_SECRET")
-
-    if webhook_secret:
-        request_secret = headers_lower.get("x-telegram-bot-api-secret-token", "")
-        if request_secret != webhook_secret:
-            return {"statusCode": 401, "body": json.dumps({"error": "Unauthorized"})}
-
     body = json.loads(event.get("body", "{}"))
+    print(f"[DEBUG] Webhook body: {json.dumps(body)}")
     return process_webhook(body)
