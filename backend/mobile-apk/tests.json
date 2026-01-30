@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "name": "Get APK download link",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "downloadUrl": "string",
+        "fileName": "string",
+        "version": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

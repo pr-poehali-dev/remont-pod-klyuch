@@ -3,12 +3,48 @@ import Footer from '@/components/Footer';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function MobileApp() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownloadAPK = () => {
-    navigate('/mobile-build-guide');
+  const handleDownloadAPK = async () => {
+    setIsDownloading(true);
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/ec98b28e-c289-4356-a70e-323afa6e2fd7');
+      const data = await response.json();
+
+      if (data.success && data.downloadUrl) {
+        // Прямое скачивание APK
+        window.location.href = data.downloadUrl;
+        
+        toast({
+          title: "Скачивание началось",
+          description: `Файл ${data.fileName} (${(data.fileSize / 1024 / 1024).toFixed(1)} МБ) начал скачиваться`,
+        });
+      } else {
+        // APK ещё не собран - перенаправляем на инструкцию
+        toast({
+          title: "APK ещё не готов",
+          description: "Следуйте инструкции для сборки приложения",
+          variant: "destructive"
+        });
+        navigate('/mobile-build-guide');
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить APK. Попробуйте позже.",
+        variant: "destructive"
+      });
+      console.error('Download error:', error);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -71,17 +107,39 @@ export default function MobileApp() {
               Скачать приложение
             </h2>
             <p className="text-white/90 mb-6 max-w-xl mx-auto">
-              Соберите APK-файл для Android за 5 простых шагов. 
-              Сборка происходит в облаке — вам не нужен Android Studio!
+              Готовое мобильное приложение для Android. 
+              Нажмите кнопку и установите APK на ваш телефон!
             </p>
-            <Button 
-              size="lg" 
-              onClick={handleDownloadAPK}
-              className="bg-white text-primary hover:bg-gray-100 gap-2"
-            >
-              <Icon name="Smartphone" size={20} />
-              Получить APK для Android
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <Button 
+                size="lg" 
+                onClick={handleDownloadAPK}
+                disabled={isDownloading}
+                className="bg-white text-primary hover:bg-gray-100 gap-2"
+              >
+                {isDownloading ? (
+                  <>
+                    <Icon name="Loader2" size={20} className="animate-spin" />
+                    Загрузка...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="Download" size={20} />
+                    Скачать APK
+                  </>
+                )}
+              </Button>
+              
+              <Button 
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/mobile-build-guide')}
+                className="bg-white/10 text-white border-white/30 hover:bg-white/20"
+              >
+                <Icon name="BookOpen" size={20} />
+                Инструкция по сборке
+              </Button>
+            </div>
           </div>
 
           {/* Системные требования */}
