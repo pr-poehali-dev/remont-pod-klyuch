@@ -184,6 +184,12 @@ const Index = () => {
                     Получить консультацию
                   </Link>
                 </Button>
+                <Button size="lg" variant="secondary" className="text-lg px-8" asChild>
+                  <Link to="/mobile-app">
+                    <Icon name="Smartphone" className="mr-2" size={20} />
+                    Скачать приложение
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
