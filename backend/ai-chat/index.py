@@ -1,6 +1,6 @@
 """
 AI-агент для общения с клиентами и автоматического распределения задач бухгалтеру.
-Использует OpenAI GPT для понимания запросов и создания задач.
+Использует YandexGPT для понимания запросов и создания задач.
 """
 import json
 import os
@@ -119,12 +119,16 @@ def create_task_for_accountant(cursor, user_id: int, task_data: dict) -> int:
     return task_id
 
 
-def call_openai(messages: List[Dict]) -> str:
-    """Вызов OpenAI API для генерации ответа"""
+def call_yandex_gpt(messages: List[Dict]) -> str:
+    """Вызов YandexGPT API для генерации ответа"""
     try:
-        from openai import OpenAI
+        import requests
         
-        client = OpenAI(api_key=get_env("OPENAI_API_KEY"))
+        api_key = get_env("YANDEX_GPT_API_KEY")
+        folder_id = get_env("YANDEX_FOLDER_ID")
+        
+        if not api_key or not folder_id:
+            return "Ошибка: не настроены ключи YandexGPT. Обратитесь к администратору."
         
         system_prompt = """Ты - AI-ассистент бухгалтерской компании "Ремонт под ключ".
 Твоя задача:
@@ -145,17 +149,39 @@ def call_openai(messages: List[Dict]) -> str:
 
 Если это обычный вопрос, отвечай просто текстом без JSON."""
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                *messages
-            ],
-            temperature=0.7,
-            max_tokens=500
-        )
+        # Формируем сообщения для YandexGPT
+        yandex_messages = [
+            {"role": "system", "text": system_prompt}
+        ]
         
-        return response.choices[0].message.content
+        for msg in messages:
+            yandex_messages.append({
+                "role": msg["role"],
+                "text": msg["content"]
+            })
+        
+        url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+        headers = {
+            "Authorization": f"Api-Key {api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "modelUri": f"gpt://{folder_id}/yandexgpt-lite/latest",
+            "completionOptions": {
+                "stream": False,
+                "temperature": 0.7,
+                "maxTokens": 500
+            },
+            "messages": yandex_messages
+        }
+        
+        response = requests.post(url, headers=headers, json=payload, timeout=30)
+        response.raise_for_status()
+        
+        result = response.json()
+        return result["result"]["alternatives"][0]["message"]["text"]
+        
     except Exception as e:
         return f"Извините, произошла ошибка: {str(e)}"
 
@@ -194,8 +220,8 @@ def process_message(event: dict) -> dict:
         # Получить историю
         chat_history = get_chat_history(cursor, user_id, limit=10)
         
-        # Вызвать OpenAI
-        ai_response = call_openai(chat_history)
+        # Вызвать YandexGPT
+        ai_response = call_yandex_gpt(chat_history)
         
         # Попробовать распарсить как JSON (создание задачи)
         task_created = False
