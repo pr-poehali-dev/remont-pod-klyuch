@@ -38,6 +38,32 @@ export default function MobileBuildGuide() {
             </p>
           </div>
 
+          <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
+            <div className="flex gap-3">
+              <Icon name="CheckCircle" size={24} className="text-green-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-green-900 mb-2">Всё готово к сборке!</h3>
+                <p className="text-green-800 text-sm mb-2">
+                  Конфигурационные файлы уже созданы в папке <code className="bg-green-100 px-2 py-0.5 rounded">mobile/</code>:
+                </p>
+                <ul className="space-y-1 text-sm text-green-800">
+                  <li className="flex items-center gap-2">
+                    <Icon name="Check" size={14} />
+                    <code>eas.json</code> - настройки сборки
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Icon name="Check" size={14} />
+                    <code>app.json</code> - конфигурация приложения
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Icon name="Check" size={14} />
+                    <code>BUILD_INSTRUCTIONS.md</code> - детальная инструкция
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div className="bg-white rounded-2xl shadow-sm border p-8 mb-8">
             <div className="space-y-8">
               <div className="flex gap-4">
