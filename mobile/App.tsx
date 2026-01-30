@@ -9,6 +9,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import DocumentScannerScreen from './src/screens/DocumentScannerScreen';
 import TasksScreen from './src/screens/TasksScreen';
 import TaxReportsScreen from './src/screens/TaxReportsScreen';
+import AIChatScreen from './src/screens/AIChatScreen';
 import { AuthContext } from './src/context/AuthContext';
 
 const Tab = createBottomTabNavigator();
@@ -27,6 +28,8 @@ function MainTabs() {
             iconName = focused ? 'list' : 'list-outline';
           } else if (route.name === 'Reports') {
             iconName = focused ? 'calendar' : 'calendar-outline';
+          } else if (route.name === 'Chat') {
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -49,6 +52,11 @@ function MainTabs() {
         name="Reports" 
         component={TaxReportsScreen}
         options={{ title: 'Отчёты ФНС' }}
+      />
+      <Tab.Screen 
+        name="Chat" 
+        component={AIChatScreen}
+        options={{ title: 'AI-помощник' }}
       />
     </Tab.Navigator>
   );

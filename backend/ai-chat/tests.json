@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "Get chat history without auth",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "Unauthorized"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Send message without auth",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "message": "Hello"
+      },
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "Unauthorized"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

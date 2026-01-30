@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "name": "Get codes without auth",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "Unauthorized"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create code without auth",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "Unauthorized"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
