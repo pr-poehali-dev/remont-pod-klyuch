@@ -7,10 +7,17 @@ import {
   FlatList,
   ActivityIndicator,
   Alert,
+  Switch,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createApiClient } from '../api/client';
 import { API_CONFIG } from '../api/config';
+import {
+  scheduleReportNotification,
+  scheduleUrgentReportNotification,
+  cancelAllNotifications,
+  getPendingNotifications,
+} from '../services/notifications';
 
 type TaxReport = {
   id: number;
@@ -30,6 +37,7 @@ export default function TaxReportsScreen() {
   const [reports, setReports] = useState<TaxReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const loadReports = async () => {
     try {
@@ -41,12 +49,53 @@ export default function TaxReportsScreen() {
         `${API_CONFIG.TAX_REPORTS}?from_date=${today.toISOString().split('T')[0]}&to_date=${nextYear.toISOString().split('T')[0]}`
       );
       setReports(response.data.reports);
+      
+      if (notificationsEnabled) {
+        scheduleNotificationsForReports(response.data.reports);
+      }
     } catch (error: any) {
       console.error('Load reports error:', error);
       Alert.alert('Ошибка', 'Не удалось загрузить календарь отчётов');
     } finally {
       setLoading(false);
       setRefreshing(false);
+    }
+  };
+
+  const scheduleNotificationsForReports = async (reportsData: TaxReport[]) => {
+    await cancelAllNotifications();
+    
+    const upcomingReports = reportsData.filter(
+      (r) => r.status === 'upcoming' && new Date(r.due_date) > new Date()
+    );
+
+    for (const report of upcomingReports) {
+      const dueDate = new Date(report.due_date);
+      
+      await scheduleReportNotification(
+        report.report_name,
+        dueDate,
+        report.reminder_days || 3
+      );
+
+      if (report.is_urgent) {
+        await scheduleUrgentReportNotification(report.report_name, dueDate);
+      }
+    }
+
+    const pending = await getPendingNotifications();
+    console.log(`Scheduled ${pending.length} notifications`);
+  };
+
+  const toggleNotifications = async (value: boolean) => {
+    setNotificationsEnabled(value);
+    
+    if (value) {
+      scheduleNotificationsForReports(reports);
+      Alert.alert('Уведомления', 'Уведомления о сдаче отчётов включены');
+    } else {
+      await cancelAllNotifications();
+      Alert.alert('Уведомления', 'Уведомления отключены');
     }
   };
 
@@ -175,6 +224,16 @@ export default function TaxReportsScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Календарь отчётов ФНС</Text>
+        <View style={styles.notificationToggle}>
+          <Ionicons name="notifications" size={20} color="#2563eb" />
+          <Text style={styles.toggleLabel}>Уведомления</Text>
+          <Switch
+            value={notificationsEnabled}
+            onValueChange={toggleNotifications}
+            trackColor={{ false: '#d1d5db', true: '#93c5fd' }}
+            thumbColor={notificationsEnabled ? '#2563eb' : '#f4f3f4'}
+          />
+        </View>
       </View>
 
       <FlatList
@@ -239,6 +298,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  notificationToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  toggleLabel: {
+    fontSize: 14,
+    color: '#374151',
+    flex: 1,
   },
   stats: {
     flexDirection: 'row',
