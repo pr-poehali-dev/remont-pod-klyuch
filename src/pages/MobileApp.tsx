@@ -5,8 +5,29 @@ import { Button } from '@/components/ui/button';
 
 export default function MobileApp() {
   const handleDownloadAPK = () => {
-    // TODO: После сборки APK добавить ссылку на скачивание
-    alert('APK-файл будет доступен после сборки приложения через Expo');
+    const buildInstructions = `
+Для сборки APK выполните команды:
+
+1. Установите EAS CLI:
+   npm install -g eas-cli
+
+2. Войдите в Expo:
+   eas login
+
+3. Перейдите в папку mobile:
+   cd mobile
+
+4. Настройте проект:
+   eas build:configure
+
+5. Соберите APK:
+   eas build --platform android --profile preview
+
+После сборки вы получите ссылку на скачивание APK-файла.
+Сборка займёт 5-10 минут и произойдёт на серверах Expo (бесплатно).
+    `.trim();
+    
+    alert(buildInstructions);
   };
 
   return (
@@ -62,11 +83,11 @@ export default function MobileApp() {
             </div>
           </div>
 
-          {/* Как установить */}
+          {/* Как собрать приложение */}
           <div className="bg-white rounded-2xl shadow-sm border p-8 mb-8">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-              <Icon name="Download" size={28} className="text-primary" />
-              Как установить приложение
+              <Icon name="Hammer" size={28} className="text-primary" />
+              Как собрать APK
             </h2>
 
             <div className="space-y-6">
@@ -75,19 +96,104 @@ export default function MobileApp() {
                   1
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Скачайте APK-файл</h3>
-                  <p className="text-gray-600 mb-3">
-                    Нажмите кнопку ниже и сохраните файл приложения на телефон
+                  <h3 className="font-semibold text-lg mb-2">Установите EAS CLI</h3>
+                  <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-sm mb-2">
+                    npm install -g eas-cli
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    Инструмент для сборки приложений Expo
                   </p>
-                  <Button onClick={handleDownloadAPK} className="gap-2">
-                    <Icon name="Download" size={20} />
-                    Скачать APK (Android)
-                  </Button>
                 </div>
               </div>
 
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  2
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Войдите в Expo</h3>
+                  <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-sm mb-2">
+                    eas login
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    Создайте бесплатный аккаунт на expo.dev, если его нет
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  3
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Перейдите в папку mobile</h3>
+                  <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-sm">
+                    cd mobile
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  4
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Настройте проект</h3>
+                  <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-sm">
+                    eas build:configure
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  5
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Соберите APK</h3>
+                  <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-sm mb-2">
+                    eas build --platform android --profile preview
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    Сборка займёт 5-10 минут. После завершения вы получите ссылку для скачивания APK
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex gap-3">
+                  <Icon name="Info" size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-blue-800">
+                    <strong>Важно:</strong> Сборка происходит на серверах Expo (бесплатно). 
+                    Вам не нужен Android Studio — всё собирается в облаке!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Как установить готовый APK */}
+          <div className="bg-white rounded-2xl shadow-sm border p-8 mb-8">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <Icon name="Smartphone" size={28} className="text-primary" />
+              Установка APK на телефон
+            </h2>
+
+            <div className="space-y-6">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
+                  1
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Скачайте APK на телефон</h3>
+                  <p className="text-gray-600">
+                    Откройте ссылку, которую вы получили после сборки, и сохраните APK-файл
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
                   2
                 </div>
                 <div>
@@ -100,11 +206,11 @@ export default function MobileApp() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
                   3
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Активируйте через личный кабинет</h3>
+                  <h3 className="font-semibold text-lg mb-2">Активируйте приложение</h3>
                   <p className="text-gray-600 mb-3">
                     После установки войдите в <a href="/dashboard" className="text-primary hover:underline">личный кабинет</a> на 
                     сайте, получите код активации и введите его в приложении
