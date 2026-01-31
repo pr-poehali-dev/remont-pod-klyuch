@@ -2,52 +2,22 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function MobileApp() {
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownloadAPK = async () => {
-    setIsDownloading(true);
+  const handleDownloadAPK = () => {
+    // Прямая ссылка на APK в S3
+    const apkUrl = 'https://cdn.poehali.dev/projects/YCAJEv-BEPEYJzEFa8PgQUPiKmY/bucket/mobile/remont-pod-klyuch.apk';
     
-    try {
-      const response = await fetch('https://functions.poehali.dev/ec98b28e-c289-4356-a70e-323afa6e2fd7');
-      const data = await response.json();
-
-      if (data.success && data.downloadUrl) {
-        // Создаём невидимую ссылку и кликаем по ней для скачивания
-        const link = document.createElement('a');
-        link.href = data.downloadUrl;
-        link.download = data.fileName || 'remont-pod-klyuch.apk';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        toast({
-          title: "Скачивание началось",
-          description: `Файл ${data.fileName || 'приложения'} начал скачиваться`,
-        });
-      } else {
-        toast({
-          title: "Файл недоступен",
-          description: "APK временно недоступен. Свяжитесь с администратором.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Ошибка загрузки",
-        description: "Не удалось скачать приложение. Попробуйте позже.",
-        variant: "destructive"
-      });
-      console.error('Download error:', error);
-    } finally {
-      setIsDownloading(false);
-    }
+    // Открываем в новой вкладке для скачивания
+    window.open(apkUrl, '_blank');
+    
+    toast({
+      title: "Скачивание началось",
+      description: "Приложение скачивается на ваше устройство",
+    });
   };
 
   return (
@@ -116,20 +86,10 @@ export default function MobileApp() {
             <Button 
               size="lg" 
               onClick={handleDownloadAPK}
-              disabled={isDownloading}
               className="bg-white text-primary hover:bg-gray-100 gap-2"
             >
-              {isDownloading ? (
-                <>
-                  <Icon name="Loader2" size={20} className="animate-spin" />
-                  Загрузка...
-                </>
-              ) : (
-                <>
-                  <Icon name="Download" size={20} />
-                  Скачать приложение
-                </>
-              )}
+              <Icon name="Download" size={20} />
+              Скачать приложение
             </Button>
           </div>
 
