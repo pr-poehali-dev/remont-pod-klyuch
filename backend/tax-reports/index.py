@@ -1,337 +1,210 @@
-"""
-API для управления календарём налоговых отчётов в ФНС.
-Позволяет просматривать, создавать и отмечать отчёты как поданные.
-"""
+"""API для управления календарём налоговых отчётов"""
 import json
 import os
+from datetime import datetime
 import psycopg2
-from datetime import datetime, timedelta
-from typing import Optional
-
-
-def get_env(key: str, default: str = "") -> str:
-    """Получить переменную окружения"""
-    return os.environ.get(key, default)
-
+from psycopg2.extras import RealDictCursor
+import jwt
 
 def get_db_connection():
-    """Создать подключение к базе данных"""
-    dsn = get_env("DATABASE_URL")
-    return psycopg2.connect(dsn)
+    return psycopg2.connect(os.environ['DATABASE_URL'])
 
-
-def cors_response(status_code: int, body: dict) -> dict:
-    """Формирование ответа с CORS заголовками"""
-    return {
-        'statusCode': status_code,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, X-Authorization'
-        },
-        'body': json.dumps(body, ensure_ascii=False, default=str)
-    }
-
-
-def verify_jwt(token: str) -> Optional[int]:
-    """Проверка JWT токена и извлечение user_id"""
-    if not token:
-        return None
-    
-    import jwt
+def verify_token(token: str) -> dict:
     try:
-        jwt_secret = get_env("JWT_SECRET")
-        payload = jwt.decode(token, jwt_secret, algorithms=["HS256"])
-        return payload.get("user_id")
+        payload = jwt.decode(token, os.environ['JWT_SECRET'], algorithms=['HS256'])
+        return payload
     except:
         return None
-
-
-def get_reports(event: dict) -> dict:
-    """
-    GET /tax-reports?from_date=2026-01-01&to_date=2026-12-31&status=upcoming
-    Получить календарь налоговых отчётов
-    """
-    # Авторизация
-    auth_header = event.get('headers', {}).get('X-Authorization', '')
-    token = auth_header.replace('Bearer ', '') if auth_header else ''
-    user_id = verify_jwt(token)
-    
-    if not user_id:
-        return cors_response(401, {"error": "Unauthorized"})
-    
-    # Параметры фильтрации
-    params = event.get('queryStringParameters', {}) or {}
-    from_date = params.get('from_date')
-    to_date = params.get('to_date')
-    status_filter = params.get('status')
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        schema = get_env("MAIN_DB_SCHEMA", "public")
-        
-        # Базовый запрос
-        query_parts = [f"""
-            SELECT id, report_type, report_name, description, due_date, 
-                   frequency, status, submitted_at, reminder_days, 
-                   created_at, updated_at
-            FROM {schema}.tax_reports_calendar
-            WHERE user_id = %s
-        """]
-        query_params = [user_id]
-        
-        # Фильтры
-        if from_date:
-            query_parts.append("AND due_date >= %s")
-            query_params.append(from_date)
-        
-        if to_date:
-            query_parts.append("AND due_date <= %s")
-            query_params.append(to_date)
-        
-        if status_filter:
-            query_parts.append("AND status = %s")
-            query_params.append(status_filter)
-        
-        query_parts.append("ORDER BY due_date ASC, created_at DESC")
-        
-        cursor.execute(" ".join(query_parts), query_params)
-        
-        reports = []
-        today = datetime.now().date()
-        
-        for row in cursor.fetchall():
-            due_date = row[4]
-            days_until_due = (due_date - today).days if due_date else None
-            
-            reports.append({
-                "id": row[0],
-                "report_type": row[1],
-                "report_name": row[2],
-                "description": row[3],
-                "due_date": due_date.isoformat() if due_date else None,
-                "frequency": row[5],
-                "status": row[6],
-                "submitted_at": row[7].isoformat() if row[7] else None,
-                "reminder_days": row[8],
-                "days_until_due": days_until_due,
-                "is_urgent": days_until_due is not None and 0 <= days_until_due <= row[8],
-                "created_at": row[9].isoformat() if row[9] else None,
-                "updated_at": row[10].isoformat() if row[10] else None
-            })
-        
-        cursor.close()
-        conn.close()
-        
-        return cors_response(200, {"reports": reports})
-        
-    except Exception as e:
-        return cors_response(500, {"error": f"Database error: {str(e)}"})
-
-
-def create_report(event: dict) -> dict:
-    """
-    POST /tax-reports
-    Создать новую запись в календаре отчётов
-    Body: {
-        "report_type": "vat",
-        "report_name": "НДС за 4 квартал 2025",
-        "description": "Декларация по НДС",
-        "due_date": "2026-01-25",
-        "frequency": "quarterly",
-        "reminder_days": 7
-    }
-    """
-    # Авторизация
-    auth_header = event.get('headers', {}).get('X-Authorization', '')
-    token = auth_header.replace('Bearer ', '') if auth_header else ''
-    user_id = verify_jwt(token)
-    
-    if not user_id:
-        return cors_response(401, {"error": "Unauthorized"})
-    
-    # Парсинг тела запроса
-    try:
-        body = json.loads(event.get('body', '{}'))
-    except:
-        return cors_response(400, {"error": "Invalid JSON"})
-    
-    report_type = body.get('report_type', 'other')
-    report_name = body.get('report_name', '')
-    description = body.get('description', '')
-    due_date = body.get('due_date')
-    frequency = body.get('frequency', 'one_time')
-    reminder_days = body.get('reminder_days', 7)
-    
-    if not report_name or not due_date:
-        return cors_response(400, {"error": "Report name and due date are required"})
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        schema = get_env("MAIN_DB_SCHEMA", "public")
-        cursor.execute(f"""
-            INSERT INTO {schema}.tax_reports_calendar 
-            (user_id, report_type, report_name, description, due_date, frequency, reminder_days)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            RETURNING id, status, created_at
-        """, (user_id, report_type, report_name, description, due_date, frequency, reminder_days))
-        
-        report_id, status, created_at = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
-        
-        return cors_response(201, {
-            "success": True,
-            "report": {
-                "id": report_id,
-                "report_type": report_type,
-                "report_name": report_name,
-                "description": description,
-                "due_date": due_date,
-                "frequency": frequency,
-                "status": status,
-                "reminder_days": reminder_days,
-                "created_at": created_at.isoformat() if created_at else None
-            }
-        })
-        
-    except Exception as e:
-        return cors_response(500, {"error": f"Database error: {str(e)}"})
-
-
-def update_report(event: dict) -> dict:
-    """
-    PUT /tax-reports?id=123
-    Обновить статус отчёта (например, отметить как поданный)
-    Body: {
-        "status": "submitted"
-    }
-    """
-    # Авторизация
-    auth_header = event.get('headers', {}).get('X-Authorization', '')
-    token = auth_header.replace('Bearer ', '') if auth_header else ''
-    user_id = verify_jwt(token)
-    
-    if not user_id:
-        return cors_response(401, {"error": "Unauthorized"})
-    
-    # Получение ID отчёта
-    params = event.get('queryStringParameters', {}) or {}
-    report_id = params.get('id')
-    
-    if not report_id:
-        return cors_response(400, {"error": "Report ID is required"})
-    
-    # Парсинг тела запроса
-    try:
-        body = json.loads(event.get('body', '{}'))
-    except:
-        return cors_response(400, {"error": "Invalid JSON"})
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        schema = get_env("MAIN_DB_SCHEMA", "public")
-        
-        # Проверка прав доступа
-        cursor.execute(f"""
-            SELECT id FROM {schema}.tax_reports_calendar
-            WHERE id = %s AND user_id = %s
-        """, (report_id, user_id))
-        
-        if not cursor.fetchone():
-            cursor.close()
-            conn.close()
-            return cors_response(404, {"error": "Report not found"})
-        
-        # Формирование запроса на обновление
-        updates = []
-        values = []
-        
-        if 'status' in body:
-            updates.append("status = %s")
-            values.append(body['status'])
-            
-            # Если статус submitted, установить submitted_at
-            if body['status'] == 'submitted':
-                updates.append("submitted_at = CURRENT_TIMESTAMP")
-        
-        if 'due_date' in body:
-            updates.append("due_date = %s")
-            values.append(body['due_date'])
-        
-        if 'reminder_days' in body:
-            updates.append("reminder_days = %s")
-            values.append(body['reminder_days'])
-        
-        if not updates:
-            cursor.close()
-            conn.close()
-            return cors_response(400, {"error": "No fields to update"})
-        
-        updates.append("updated_at = CURRENT_TIMESTAMP")
-        values.append(report_id)
-        
-        query = f"""
-            UPDATE {schema}.tax_reports_calendar
-            SET {', '.join(updates)}
-            WHERE id = %s
-            RETURNING id, report_type, report_name, description, due_date, 
-                      frequency, status, submitted_at, reminder_days, 
-                      created_at, updated_at
-        """
-        
-        cursor.execute(query, values)
-        row = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
-        
-        return cors_response(200, {
-            "success": True,
-            "report": {
-                "id": row[0],
-                "report_type": row[1],
-                "report_name": row[2],
-                "description": row[3],
-                "due_date": row[4].isoformat() if row[4] else None,
-                "frequency": row[5],
-                "status": row[6],
-                "submitted_at": row[7].isoformat() if row[7] else None,
-                "reminder_days": row[8],
-                "created_at": row[9].isoformat() if row[9] else None,
-                "updated_at": row[10].isoformat() if row[10] else None
-            }
-        })
-        
-    except Exception as e:
-        return cors_response(500, {"error": f"Database error: {str(e)}"})
-
 
 def handler(event: dict, context) -> dict:
-    """
-    Главный обработчик для работы с календарём налоговых отчётов.
-    GET /tax-reports - список отчётов
-    POST /tax-reports - создать отчёт
-    PUT /tax-reports?id=123 - обновить отчёт
-    """
+    """API для календаря налоговых отчётов"""
     method = event.get('httpMethod', 'GET')
     
-    # CORS preflight
     if method == 'OPTIONS':
-        return cors_response(200, {})
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, X-Authorization'
+            },
+            'body': '',
+            'isBase64Encoded': False
+        }
     
-    if method == 'GET':
-        return get_reports(event)
-    elif method == 'POST':
-        return create_report(event)
-    elif method == 'PUT':
-        return update_report(event)
-    else:
-        return cors_response(405, {"error": "Method not allowed"})
+    auth_header = event.get('headers', {}).get('X-Authorization', '')
+    token = auth_header.replace('Bearer ', '') if auth_header else None
+    user_data = verify_token(token) if token else None
+    
+    if not user_data:
+        return {
+            'statusCode': 401,
+            'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': 'Unauthorized'}),
+            'isBase64Encoded': False
+        }
+    
+    user_id = user_data.get('user_id')
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    
+    try:
+        if method == 'POST':
+            data = json.loads(event.get('body', '{}'))
+            
+            report_type = data.get('report_type', 'other')
+            title = data.get('title', '').strip()
+            due_date = data.get('due_date')
+            frequency = data.get('frequency', 'one_time')
+            reminder_days = data.get('reminder_days', 7)
+            
+            if not title or not due_date:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Title and due_date are required'}),
+                    'isBase64Encoded': False
+                }
+            
+            cur.execute("""
+                INSERT INTO tax_reports_calendar 
+                (user_id, report_type, title, due_date, frequency, status, reminder_days, created_at)
+                VALUES (%s, %s, %s, %s, %s, 'upcoming', %s, CURRENT_TIMESTAMP)
+                RETURNING id, user_id, report_type, title, due_date, frequency, status, reminder_days, created_at
+            """, (user_id, report_type, title, due_date, frequency, reminder_days))
+            
+            result = dict(cur.fetchone())
+            conn.commit()
+            
+            return {
+                'statusCode': 201,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps(result, default=str),
+                'isBase64Encoded': False
+            }
+        
+        elif method == 'GET':
+            params = event.get('queryStringParameters', {})
+            from_date = params.get('from_date')
+            to_date = params.get('to_date')
+            status = params.get('status')
+            
+            query = """
+                SELECT id, user_id, report_type, title, due_date, frequency, 
+                       status, reminder_days, submitted_at, created_at,
+                       EXTRACT(DAY FROM (due_date - CURRENT_DATE))::INTEGER as days_until_due
+                FROM tax_reports_calendar
+                WHERE user_id = %s
+            """
+            query_params = [user_id]
+            
+            if from_date:
+                query += " AND due_date >= %s"
+                query_params.append(from_date)
+            
+            if to_date:
+                query += " AND due_date <= %s"
+                query_params.append(to_date)
+            
+            if status:
+                query += " AND status = %s"
+                query_params.append(status)
+            
+            query += " ORDER BY due_date ASC"
+            
+            cur.execute(query, query_params)
+            
+            reports = [dict(row) for row in cur.fetchall()]
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps(reports, default=str),
+                'isBase64Encoded': False
+            }
+        
+        elif method == 'PUT':
+            params = event.get('queryStringParameters', {})
+            report_id = params.get('id')
+            
+            if not report_id:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Report ID is required'}),
+                    'isBase64Encoded': False
+                }
+            
+            data = json.loads(event.get('body', '{}'))
+            
+            update_fields = []
+            update_values = []
+            
+            if 'status' in data:
+                update_fields.append('status = %s')
+                update_values.append(data['status'])
+                if data['status'] == 'submitted':
+                    update_fields.append('submitted_at = CURRENT_TIMESTAMP')
+            
+            if 'due_date' in data:
+                update_fields.append('due_date = %s')
+                update_values.append(data['due_date'])
+            
+            if 'reminder_days' in data:
+                update_fields.append('reminder_days = %s')
+                update_values.append(data['reminder_days'])
+            
+            if not update_fields:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'No fields to update'}),
+                    'isBase64Encoded': False
+                }
+            
+            update_values.extend([report_id, user_id])
+            
+            cur.execute(f"""
+                UPDATE tax_reports_calendar
+                SET {', '.join(update_fields)}
+                WHERE id = %s AND user_id = %s
+                RETURNING id, user_id, report_type, title, due_date, frequency, status, reminder_days, submitted_at, created_at
+            """, update_values)
+            
+            result = cur.fetchone()
+            
+            if not result:
+                return {
+                    'statusCode': 404,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Report not found'}),
+                    'isBase64Encoded': False
+                }
+            
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps(dict(result), default=str),
+                'isBase64Encoded': False
+            }
+    
+    except Exception as e:
+        conn.rollback()
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)}),
+            'isBase64Encoded': False
+        }
+    finally:
+        cur.close()
+        conn.close()
+    
+    return {
+        'statusCode': 405,
+        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+        'body': json.dumps({'error': 'Method not allowed'}),
+        'isBase64Encoded': False
+    }

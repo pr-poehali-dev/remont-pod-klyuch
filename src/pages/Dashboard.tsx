@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/icon';
@@ -6,25 +7,44 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { activationAPI, tasksAPI, taxReportsAPI, aiChatAPI } from '@/lib/api';
 
 export default function Dashboard() {
-  const [activationCode, setActivationCode] = useState('');
+  const [message, setMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [codes, setCodes] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [codesData, tasksData, reportsData, chatData] = await Promise.all([
+        activationAPI.list().catch(() => []),
+        tasksAPI.list({ status: 'pending', limit: 10 }).catch(() => []),
+        taxReportsAPI.list({ status: 'upcoming' }).catch(() => []),
+        aiChatAPI.getHistory(5).catch(() => [])
+      ]);
+      
+      setCodes(codesData);
+      setTasks(tasksData);
+      setReports(reportsData);
+      setChatHistory(chatData);
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    }
+  };
 
   const generateCode = async () => {
     setLoading(true);
     try {
-      // TODO: Вызов backend API для генерации кода
-      const newCode = {
-        code: 'ABC' + Math.random().toString(36).substr(2, 5).toUpperCase(),
-        created_at: new Date().toISOString(),
-        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        is_active: true,
-        used_at: null,
-      };
-      
+      const newCode = await activationAPI.create();
       setCodes([newCode, ...codes]);
       toast({
         title: 'Код создан',
@@ -33,7 +53,39 @@ export default function Dashboard() {
     } catch (error) {
       toast({
         title: 'Ошибка',
-        description: 'Не удалось создать код активации',
+        description: 'Не удалось создать код активации. Войдите через Telegram.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!message.trim()) return;
+    
+    const userMessage = message;
+    setMessage('');
+    setLoading(true);
+    
+    try {
+      const response = await aiChatAPI.send(userMessage);
+      setChatHistory([...chatHistory, 
+        { role: 'user', message: userMessage },
+        { role: 'assistant', message: response.message }
+      ]);
+      
+      if (response.task_created) {
+        toast({
+          title: 'Задача создана',
+          description: 'Ваш запрос добавлен в список задач для бухгалтера',
+        });
+        await loadData();
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось отправить сообщение. Войдите через Telegram.',
         variant: 'destructive',
       });
     } finally {
@@ -152,13 +204,23 @@ export default function Dashboard() {
                     </div>
                   </div>
 
+                  {chatHistory.slice(-4).map((msg, idx) => (
+                    <div key={idx} className={`p-3 rounded-lg ${
+                      msg.role === 'user' ? 'bg-gray-100 ml-8' : 'bg-blue-50 mr-8'
+                    }`}>
+                      <p className="text-sm">{msg.message}</p>
+                    </div>
+                  ))}
+
                   <div className="flex gap-2">
                     <Input 
                       placeholder="Например: Мне нужен счёт на 50000 руб..."
-                      value={activationCode}
-                      onChange={(e) => setActivationCode(e.target.value)}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                      disabled={loading}
                     />
-                    <Button>
+                    <Button onClick={sendMessage} disabled={loading}>
                       <Icon name="Send" size={20} />
                     </Button>
                   </div>
@@ -179,7 +241,8 @@ export default function Dashboard() {
                           variant="outline" 
                           size="sm"
                           className="text-xs"
-                          onClick={() => setActivationCode(cmd)}
+                          onClick={() => setMessage(cmd)}
+                          disabled={loading}
                         >
                           {cmd}
                         </Button>
@@ -201,7 +264,7 @@ export default function Dashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold mb-2">0</div>
+                <div className="text-3xl font-bold mb-2">-</div>
                 <p className="text-sm text-gray-600">загруженных документов</p>
               </CardContent>
             </Card>
@@ -214,7 +277,7 @@ export default function Dashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold mb-2">0</div>
+                <div className="text-3xl font-bold mb-2">{tasks.length}</div>
                 <p className="text-sm text-gray-600">активных задач</p>
               </CardContent>
             </Card>
@@ -227,7 +290,7 @@ export default function Dashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold mb-2">0</div>
+                <div className="text-3xl font-bold mb-2">{reports.length}</div>
                 <p className="text-sm text-gray-600">предстоящих отчётов</p>
               </CardContent>
             </Card>
