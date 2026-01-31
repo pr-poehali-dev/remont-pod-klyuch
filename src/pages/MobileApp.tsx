@@ -19,26 +19,29 @@ export default function MobileApp() {
       const data = await response.json();
 
       if (data.success && data.downloadUrl) {
-        // Прямое скачивание APK
-        window.location.href = data.downloadUrl;
+        // Создаём невидимую ссылку и кликаем по ней для скачивания
+        const link = document.createElement('a');
+        link.href = data.downloadUrl;
+        link.download = data.fileName || 'remont-pod-klyuch.apk';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         
         toast({
           title: "Скачивание началось",
-          description: `Файл ${data.fileName} (${(data.fileSize / 1024 / 1024).toFixed(1)} МБ) начал скачиваться`,
+          description: `Файл ${data.fileName || 'приложения'} начал скачиваться`,
         });
       } else {
-        // APK ещё не собран - перенаправляем на инструкцию
         toast({
-          title: "APK ещё не готов",
-          description: "Следуйте инструкции для сборки приложения",
+          title: "Файл недоступен",
+          description: "APK временно недоступен. Свяжитесь с администратором.",
           variant: "destructive"
         });
-        navigate('/mobile-build-guide');
       }
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось загрузить APK. Попробуйте позже.",
+        title: "Ошибка загрузки",
+        description: "Не удалось скачать приложение. Попробуйте позже.",
         variant: "destructive"
       });
       console.error('Download error:', error);
@@ -110,36 +113,24 @@ export default function MobileApp() {
               Готовое мобильное приложение для Android. 
               Нажмите кнопку и установите APK на ваш телефон!
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-              <Button 
-                size="lg" 
-                onClick={handleDownloadAPK}
-                disabled={isDownloading}
-                className="bg-white text-primary hover:bg-gray-100 gap-2"
-              >
-                {isDownloading ? (
-                  <>
-                    <Icon name="Loader2" size={20} className="animate-spin" />
-                    Загрузка...
-                  </>
-                ) : (
-                  <>
-                    <Icon name="Download" size={20} />
-                    Скачать APK
-                  </>
-                )}
-              </Button>
-              
-              <Button 
-                size="lg"
-                variant="outline"
-                onClick={() => navigate('/mobile-build-guide')}
-                className="bg-white/10 text-white border-white/30 hover:bg-white/20"
-              >
-                <Icon name="BookOpen" size={20} />
-                Инструкция по сборке
-              </Button>
-            </div>
+            <Button 
+              size="lg" 
+              onClick={handleDownloadAPK}
+              disabled={isDownloading}
+              className="bg-white text-primary hover:bg-gray-100 gap-2"
+            >
+              {isDownloading ? (
+                <>
+                  <Icon name="Loader2" size={20} className="animate-spin" />
+                  Загрузка...
+                </>
+              ) : (
+                <>
+                  <Icon name="Download" size={20} />
+                  Скачать приложение
+                </>
+              )}
+            </Button>
           </div>
 
           {/* Системные требования */}
