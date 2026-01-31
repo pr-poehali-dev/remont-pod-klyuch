@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    // Проверяем, установлено ли приложение
+    setIsInstalled(window.matchMedia('(display-mode: standalone)').matches);
+  }, []);
 
   const navLinks = [
     { name: 'Главная', path: '/' },
@@ -40,6 +46,14 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
+            {!isInstalled && (
+              <Button variant="outline" asChild className="gap-2">
+                <Link to="/mobile-app">
+                  <Icon name="Smartphone" size={16} />
+                  Установить
+                </Link>
+              </Button>
+            )}
             <Button variant="outline" asChild>
               <Link to="/calculator">
                 Калькулятор
@@ -74,6 +88,14 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
+              {!isInstalled && (
+                <Button variant="outline" className="w-full gap-2" asChild>
+                  <Link to="/mobile-app" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Icon name="Smartphone" size={16} />
+                    Установить приложение
+                  </Link>
+                </Button>
+              )}
               <Button variant="outline" className="w-full" asChild>
                 <Link to="/calculator">
                   Калькулятор
