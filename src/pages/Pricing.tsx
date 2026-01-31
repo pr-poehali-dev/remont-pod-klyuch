@@ -42,17 +42,15 @@ const Pricing = () => {
       description: 'Для сельхозпроизводителей и фермеров',
       badge: 'Популярный',
       features: [
-        { text: 'ФГИС Зерно', included: true },
-        { text: 'ФГИС Меркурий', included: true },
+        { text: 'ФГИС Зерно и Меркурий', included: true },
         { text: 'Отчёт в Росстат по форме 29-СХ', included: true },
         { text: 'Отчётность по субсидиям', included: true },
         { text: 'Единый налоговый счёт (ЕНС)', included: true },
         { text: 'Расчёт заработной платы', included: true },
         { text: 'Финансовый прогноз на год', included: true },
-        { text: 'Оптимизация налогов', included: true },
-        { text: 'Консультации агронома', included: false }
+        { text: 'Оптимизация налогов', included: true }
       ],
-      cta: 'Оплатить',
+      cta: 'Заказать',
       ctaLink: '/forecast-form',
       variant: 'default' as const,
       isPaid: true
@@ -67,12 +65,9 @@ const Pricing = () => {
         { text: 'Декларация по УСН', included: true },
         { text: 'Книга доходов и расходов', included: true },
         { text: 'Финансовый прогноз на год', included: true },
-        { text: 'Расчёт зарплаты (до 5 чел)', included: false },
-        { text: 'Помощь при проверках', included: false },
-        { text: 'ФГИС Зерно', included: false },
-        { text: 'ФГИС Меркурий', included: false }
+        { text: 'Консультации бухгалтера', included: true }
       ],
-      cta: 'Оплатить',
+      cta: 'Заказать',
       ctaLink: '/forecast-form',
       variant: 'outline' as const,
       isPaid: true
@@ -87,12 +82,9 @@ const Pricing = () => {
         { text: 'Расчёт зарплаты (до 15 чел)', included: true },
         { text: 'Отчётность в ПФР, ФСС', included: true },
         { text: 'Помощь при проверках', included: true },
-        { text: 'Оптимизация налогов', included: true },
-        { text: 'Управленческий учёт', included: false },
-        { text: 'ФГИС Зерно', included: false },
-        { text: 'ФГИС Меркурий', included: false }
+        { text: 'Оптимизация налогов', included: true }
       ],
-      cta: 'Оплатить',
+      cta: 'Заказать',
       ctaLink: '/forecast-form',
       variant: 'outline' as const,
       isPaid: true
@@ -108,11 +100,9 @@ const Pricing = () => {
         { text: 'Управленческий учёт', included: true },
         { text: 'Бюджетирование', included: true },
         { text: 'Финансовая аналитика', included: true },
-        { text: 'Личный бухгалтер', included: true },
-        { text: 'ФГИС Зерно', included: false },
-        { text: 'ФГИС Меркурий', included: false }
+        { text: 'Личный бухгалтер', included: true }
       ],
-      cta: 'Оплатить',
+      cta: 'Заказать',
       ctaLink: '/forecast-form',
       variant: 'outline' as const,
       isPaid: true
