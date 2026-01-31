@@ -16,6 +16,7 @@ import Accounting from "./pages/Accounting";
 import Privacy from "./pages/Privacy";
 import TelegramCallback from "./pages/TelegramCallback";
 import MobileApp from "./pages/MobileApp";
+import MobileLogin from "./pages/MobileLogin";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/auth/telegram/callback" element={<TelegramCallback />} />
+          <Route path="/mobile-login" element={<MobileLogin />} />
           <Route path="/mobile-app" element={<MobileApp />} />
           <Route path="/dashboard" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +7,21 @@ import Icon from '@/components/ui/icon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const MobileApp = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('scanner');
+  const [agentId, setAgentId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('user_token');
+    const agent = localStorage.getItem('agent_id');
+    
+    if (!token) {
+      navigate('/mobile-login');
+      return;
+    }
+    
+    setAgentId(agent);
+  }, [navigate]);
 
   const navigationItems = [
     { id: 'scanner', label: 'Сканер', icon: 'Scan' },

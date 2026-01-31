@@ -46,6 +46,12 @@ const Header = () => {
                 Калькулятор
               </Link>
             </Button>
+            <Button variant="outline" asChild>
+              <Link to="/mobile-login">
+                <Icon name="Smartphone" size={18} className="mr-2" />
+                Войти в приложение
+              </Link>
+            </Button>
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <Link to="/contacts">
                 Консультация
