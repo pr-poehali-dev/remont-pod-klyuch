@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "name": "Send message to AI agent",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "message": "Как заполнить декларацию по УСН?",
+        "agent_id": "agent_test_123",
+        "user_phone": "79270000000"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
