@@ -3,6 +3,7 @@ const API_FUNCTIONS = {
   tasks: 'https://functions.poehali.dev/a29307b8-67a5-4868-91d2-61833462e14c',
   taxReports: 'https://functions.poehali.dev/2d73a910-182a-4f8c-9f82-1e4c985f07fa',
   aiChat: 'https://functions.poehali.dev/46a6f4a5-8997-492d-86e5-531b4d7664b5',
+  mobileApk: 'https://functions.poehali.dev/ec98b28e-c289-4356-a70e-323afa6e2fd7',
 };
 
 function getAuthToken(): string | null {
@@ -158,6 +159,14 @@ export const aiChatAPI = {
   
   getHistory: async (limit: number = 20) => {
     return apiRequest(`${API_FUNCTIONS.aiChat}?limit=${limit}`, {
+      method: 'GET',
+    });
+  },
+};
+
+export const mobileAPI = {
+  getDownloadUrl: async () => {
+    return apiRequest(API_FUNCTIONS.mobileApk, {
       method: 'GET',
     });
   },

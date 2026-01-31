@@ -168,11 +168,13 @@ export default function Dashboard() {
                   <p className="text-sm text-gray-600 mb-3">
                     📱 Ещё не установили приложение?
                   </p>
-                  <Button variant="outline" className="w-full" asChild>
-                    <a href="/mobile-app">
-                      <Icon name="Download" size={16} className="mr-2" />
-                      Скачать приложение
-                    </a>
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2" 
+                    onClick={() => navigate('/mobile-app')}
+                  >
+                    <Icon name="Download" size={16} />
+                    Скачать приложение
                   </Button>
                 </div>
               </CardContent>

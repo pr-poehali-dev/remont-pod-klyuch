@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { mobileAPI } from '@/lib/api';
 
 export default function MobileApp() {
   const { toast } = useToast();
@@ -11,9 +12,7 @@ export default function MobileApp() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Загружаем актуальный URL APK из backend
-    fetch('https://functions.poehali.dev/7d448ac9-a500-4498-9b63-427e5ac733b0')
-      .then(res => res.json())
+    mobileAPI.getDownloadUrl()
       .then(data => {
         if (data.success && data.downloadUrl) {
           setApkUrl(data.downloadUrl);
