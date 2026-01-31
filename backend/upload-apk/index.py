@@ -27,7 +27,7 @@ def handler(event: dict, context) -> dict:
             
             cur.execute("""
                 SELECT download_url, file_name 
-                FROM t_p37682378_remont_pod_klyuch.mobile_apk_versions 
+                FROM mobile_apk_versions 
                 WHERE is_active = true 
                 ORDER BY uploaded_at DESC 
                 LIMIT 1
@@ -120,14 +120,14 @@ def handler(event: dict, context) -> dict:
             
             # Деактивируем предыдущие версии
             cur.execute("""
-                UPDATE t_p37682378_remont_pod_klyuch.mobile_apk_versions 
+                UPDATE mobile_apk_versions 
                 SET is_active = false 
                 WHERE is_active = true
             """)
             
             # Добавляем новую версию
             cur.execute("""
-                INSERT INTO t_p37682378_remont_pod_klyuch.mobile_apk_versions 
+                INSERT INTO mobile_apk_versions 
                 (file_name, download_url, is_active) 
                 VALUES (%s, %s, %s)
             """, (file_name, cdn_url, True))
