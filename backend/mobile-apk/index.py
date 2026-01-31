@@ -14,27 +14,21 @@ def handler(event: dict, context) -> dict:
                 'Access-Control-Allow-Methods': 'GET, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type'
             },
-            'body': ''
+            'body': '',
+            'isBase64Encoded': False
         }
 
     if method == 'GET':
-        # Проверяем наличие APK в S3
+        apk_key = 'mobile/remont-pod-klyuch.apk'
+        cdn_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{apk_key}"
+        
         s3 = boto3.client('s3',
             endpoint_url='https://bucket.poehali.dev',
             aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
         )
-
-        apk_key = 'mobile/remont-pod-klyuch.apk'
         
         try:
-            # Проверяем существование файла
-            s3.head_object(Bucket='files', Key=apk_key)
-            
-            # Формируем публичную ссылку на CDN
-            cdn_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{apk_key}"
-            
-            # Получаем метаданные файла
             obj_info = s3.head_object(Bucket='files', Key=apk_key)
             file_size = obj_info['ContentLength']
             last_modified = obj_info['LastModified'].isoformat()
@@ -48,25 +42,25 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({
                     'success': True,
                     'downloadUrl': cdn_url,
-                    'fileName': 'remont-pod-klyuch.apk',
+                    'fileName': 'БухКонтроль.apk',
                     'fileSize': file_size,
                     'lastModified': last_modified,
                     'version': '1.0.0'
-                })
+                }),
+                'isBase64Encoded': False
             }
-        except s3.exceptions.ClientError:
-            # Файл не найден - возвращаем инструкцию по сборке
+        except:
             return {
-                'statusCode': 404,
+                'statusCode': 200,
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
                 'body': json.dumps({
                     'success': False,
-                    'message': 'APK-файл ещё не собран. Следуйте инструкции для сборки.',
-                    'buildInstructionsUrl': '/mobile-build-guide'
-                })
+                    'message': 'APK скоро будет доступен. Обновите страницу через минуту.'
+                }),
+                'isBase64Encoded': False
             }
 
     return {
@@ -75,5 +69,6 @@ def handler(event: dict, context) -> dict:
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
         },
-        'body': json.dumps({'error': 'Method not allowed'})
+        'body': json.dumps({'error': 'Method not allowed'}),
+        'isBase64Encoded': False
     }

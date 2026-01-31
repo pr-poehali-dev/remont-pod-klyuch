@@ -159,8 +159,36 @@ export default function MobileApp() {
             </ul>
           </div>
 
+          {/* Инструкция по сборке для разработчиков */}
+          <div className="mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl">
+            <div className="flex items-start gap-3">
+              <Icon name="Code2" size={24} className="text-gray-700 flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 mb-2">📖 Для разработчиков</h3>
+                <p className="text-gray-700 mb-3">
+                  Исходный код React Native приложения находится в папке <code className="bg-white px-2 py-1 rounded text-sm">mobile-app/</code>
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  <Button variant="outline" size="sm" asChild>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                      <Icon name="Github" size={16} className="mr-2" />
+                      GitHub
+                    </a>
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    navigator.clipboard.writeText('cd mobile-app && npm install && cd android && ./gradlew assembleRelease');
+                    toast({ title: 'Команда скопирована' });
+                  }}>
+                    <Icon name="Terminal" size={16} className="mr-2" />
+                    Собрать APK
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Версия iOS */}
-          <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="mt-4 p-6 bg-blue-50 border border-blue-200 rounded-xl">
             <div className="flex items-start gap-3">
               <Icon name="Info" size={24} className="text-blue-600 flex-shrink-0 mt-1" />
               <div>
