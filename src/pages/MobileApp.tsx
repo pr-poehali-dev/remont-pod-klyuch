@@ -1,14 +1,49 @@
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export default function MobileApp() {
-  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [apkUrl, setApkUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Загружаем актуальный URL APK из backend
+    fetch('https://functions.poehali.dev/7d448ac9-a500-4498-9b63-427e5ac733b0')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.downloadUrl) {
+          setApkUrl(data.downloadUrl);
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка загрузки APK URL:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleDownloadAPK = () => {
-    navigate('/mobile-build-guide');
+    if (!apkUrl) {
+      toast({
+        title: "Ошибка",
+        description: "APK файл еще не загружен. Обратитесь к администратору.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Открываем в новой вкладке для скачивания
+    window.open(apkUrl, '_blank');
+    
+    toast({
+      title: "Скачивание началось",
+      description: "Приложение скачивается на ваше устройство",
+    });
   };
 
   return (
@@ -71,16 +106,31 @@ export default function MobileApp() {
               Скачать приложение
             </h2>
             <p className="text-white/90 mb-6 max-w-xl mx-auto">
-              Соберите APK-файл для Android за 5 простых шагов. 
-              Сборка происходит в облаке — вам не нужен Android Studio!
+              Готовое мобильное приложение для Android. 
+              Нажмите кнопку и установите APK на ваш телефон!
             </p>
             <Button 
               size="lg" 
               onClick={handleDownloadAPK}
               className="bg-white text-primary hover:bg-gray-100 gap-2"
+              disabled={isLoading || !apkUrl}
             >
-              <Icon name="Smartphone" size={20} />
-              Получить APK для Android
+              {isLoading ? (
+                <>
+                  <Icon name="Loader2" size={20} className="animate-spin" />
+                  Загрузка...
+                </>
+              ) : apkUrl ? (
+                <>
+                  <Icon name="Download" size={20} />
+                  Скачать приложение
+                </>
+              ) : (
+                <>
+                  <Icon name="AlertCircle" size={20} />
+                  Приложение недоступно
+                </>
+              )}
             </Button>
           </div>
 
