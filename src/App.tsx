@@ -17,6 +17,9 @@ import Privacy from "./pages/Privacy";
 import TelegramCallback from "./pages/TelegramCallback";
 import MobileApp from "./pages/MobileApp";
 import MobileLogin from "./pages/MobileLogin";
+import AdminPanel from "./pages/AdminPanel";
+import AdminLogin from "./pages/AdminLogin";
+import AppDownload from "./pages/AppDownload";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +43,9 @@ const App = () => (
           <Route path="/auth/telegram/callback" element={<TelegramCallback />} />
           <Route path="/mobile-login" element={<MobileLogin />} />
           <Route path="/mobile-app" element={<MobileApp />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/app-download" element={<AppDownload />} />
           <Route path="/dashboard" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
