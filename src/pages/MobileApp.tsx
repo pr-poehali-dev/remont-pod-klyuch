@@ -23,14 +23,41 @@ const MobileApp = () => {
     setAgentId(agent);
   }, [navigate]);
 
+  const [messages, setMessages] = useState<Array<{role: string, text: string, time: string}>>([
+    { role: 'agent', text: 'Здравствуйте! Я ваш личный бухгалтерский помощник. Чем могу помочь?', time: new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'}) }
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+
   const navigationItems = [
     { id: 'scanner', label: 'Сканер', icon: 'Scan' },
     { id: 'operations', label: 'Операции', icon: 'FileText' },
     { id: 'notifications', label: 'Уведомления', icon: 'Bell' },
-    { id: 'consultant', label: 'Консультант', icon: 'MessageCircle' },
+    { id: 'ai-chat', label: 'ИИ-помощник', icon: 'Bot' },
     { id: 'analytics', label: 'Аналитика', icon: 'TrendingUp' },
     { id: 'storage', label: 'Хранилище', icon: 'Cloud' },
   ];
+
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim()) return;
+
+    const userMessage = {
+      role: 'user',
+      text: inputMessage,
+      time: new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
+
+    setTimeout(() => {
+      const agentResponse = {
+        role: 'agent',
+        text: 'Я обработал ваш запрос. Это демо-версия ИИ-помощника. В полной версии я смогу: анализировать документы, напоминать о сроках, оптимизировать налоги и многое другое!',
+        time: new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})
+      };
+      setMessages(prev => [...prev, agentResponse]);
+    }, 1000);
+  };
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -202,6 +229,61 @@ const MobileApp = () => {
                     </div>
                   </Card>
                 ))}
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ai-chat" className="space-y-4">
+            <Card className="p-6 h-[calc(100vh-240px)] flex flex-col">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                  <Icon name="Bot" size={24} className="text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">ИИ-помощник</h2>
+                  <p className="text-xs text-muted-foreground">Ваш персональный бухгалтер</p>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+                {messages.map((msg, idx) => (
+                  <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      msg.role === 'agent' ? 'bg-primary' : 'bg-accent'
+                    }`}>
+                      <Icon name={msg.role === 'agent' ? 'Bot' : 'User'} size={16} className="text-white" />
+                    </div>
+                    <div className={`flex-1 ${msg.role === 'user' ? 'text-right' : ''}`}>
+                      <div className={`inline-block p-3 rounded-lg ${
+                        msg.role === 'agent' 
+                          ? 'bg-accent text-left' 
+                          : 'bg-primary text-white text-left'
+                      }`}>
+                        <p className="text-sm">{msg.text}</p>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">{msg.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Напишите сообщение..."
+                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <Button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
+                  <Icon name="Send" size={20} />
+                </Button>
+              </div>
+
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-900">
+                <Icon name="Info" size={14} className="inline mr-1" />
+                Демо-режим. В полной версии ИИ запоминает вашу историю и использует YandexGPT
               </div>
             </Card>
           </TabsContent>

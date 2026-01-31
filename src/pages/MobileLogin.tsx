@@ -20,24 +20,12 @@ const MobileLogin = () => {
     }
 
     setIsLoading(true);
-    try {
-      const response = await fetch('https://functions.poehali.dev/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone })
-      });
-
-      if (response.ok) {
-        toast.success('Код отправлен на ваш телефон');
-        setStep('code');
-      } else {
-        toast.error('Ошибка отправки кода');
-      }
-    } catch (error) {
-      toast.error('Ошибка соединения');
-    } finally {
+    
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      toast.success('Демо-режим: используйте код 1234');
+      setStep('code');
+    }, 1000);
   };
 
   const handleVerifyCode = async () => {
@@ -46,29 +34,25 @@ const MobileLogin = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const response = await fetch('https://functions.poehali.dev/verify-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('user_token', data.token);
-        localStorage.setItem('user_phone', phone);
-        localStorage.setItem('agent_id', data.agent_id);
-        toast.success('Вход выполнен успешно!');
-        navigate('/mobile-app');
-      } else {
-        toast.error('Неверный код');
-      }
-    } catch (error) {
-      toast.error('Ошибка соединения');
-    } finally {
-      setIsLoading(false);
+    if (code !== '1234') {
+      toast.error('Неверный код. Используйте 1234');
+      return;
     }
+
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      const agentId = `agent_${phone}_${Date.now()}`;
+      const token = `demo_token_${Date.now()}`;
+      
+      localStorage.setItem('user_token', token);
+      localStorage.setItem('user_phone', phone);
+      localStorage.setItem('agent_id', agentId);
+      
+      setIsLoading(false);
+      toast.success('Вход выполнен успешно!');
+      navigate('/mobile-app');
+    }, 1000);
   };
 
   const formatPhone = (value: string) => {
