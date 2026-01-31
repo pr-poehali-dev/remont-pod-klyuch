@@ -1,38 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
+const APK_URL = 'https://cdn.poehali.dev/projects/YCAJErc5ICrWGXasApLZcYw3CZz-gMsC/bucket/buhkontrol.apk';
 
 export default function InstallPWA() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallButton, setShowInstallButton] = useState(false);
+  const [showInstallButton, setShowInstallButton] = useState(true);
 
-  useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowInstallButton(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handler);
-
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === 'accepted') {
-      setShowInstallButton(false);
-    }
-    setDeferredPrompt(null);
+  const handleDownloadClick = () => {
+    window.location.href = APK_URL;
   };
 
   if (!showInstallButton) return null;
@@ -45,14 +21,14 @@ export default function InstallPWA() {
             <Icon name="Download" size={20} className="text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm mb-1">Установить приложение</h3>
+            <h3 className="font-semibold text-sm mb-1">Скачать приложение</h3>
             <p className="text-xs text-gray-600 mb-3">
-              Добавьте БухКонтроль на главный экран для быстрого доступа
+              Установите БухКонтроль на свой Android-телефон
             </p>
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleInstallClick} className="gap-1">
-                <Icon name="Plus" size={14} />
-                Установить
+              <Button size="sm" onClick={handleDownloadClick} className="gap-1">
+                <Icon name="Download" size={14} />
+                Скачать APK
               </Button>
               <Button 
                 size="sm" 
