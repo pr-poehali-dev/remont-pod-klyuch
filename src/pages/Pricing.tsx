@@ -188,8 +188,8 @@ const Pricing = () => {
             <h2 className="text-2xl font-bold text-muted-foreground">Тарифы для действующего бизнеса</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto">
-            {plans.map((plan, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-[1400px] mx-auto">
+            {plans.filter(plan => plan.name !== 'ТЕСТ-ДРАЙВ').map((plan, index) => (
               <Card 
                 key={index} 
                 className={`relative ${plan.badge === 'Популярный' ? 'border-2 border-primary shadow-xl scale-105' : ''}`}
