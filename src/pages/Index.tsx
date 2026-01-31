@@ -154,7 +154,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20 relative z-0">
+      <main className="pt-20">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10">
           <div className="container mx-auto px-4">
@@ -182,12 +182,6 @@ const Index = () => {
                   <Link to="/contacts">
                     <Icon name="Phone" className="mr-2" size={20} />
                     Получить консультацию
-                  </Link>
-                </Button>
-                <Button size="lg" variant="secondary" className="text-lg px-8" asChild>
-                  <Link to="/mobile-app">
-                    <Icon name="Smartphone" className="mr-2" size={20} />
-                    Скачать приложение
                   </Link>
                 </Button>
               </div>

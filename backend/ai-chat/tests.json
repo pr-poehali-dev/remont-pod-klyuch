@@ -1,16 +1,22 @@
 {
   "tests": [
     {
-      "name": "OPTIONS request for CORS",
-      "method": "OPTIONS",
+      "name": "Get chat history without auth",
+      "method": "GET",
       "path": "/",
-      "expectedStatus": 200,
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "Unauthorized"
+      },
       "bodyMatcher": "partial"
     },
     {
-      "name": "GET without auth returns 401",
-      "method": "GET",
+      "name": "Send message without auth",
+      "method": "POST",
       "path": "/",
+      "body": {
+        "message": "Hello"
+      },
       "expectedStatus": 401,
       "expectedBody": {
         "error": "Unauthorized"

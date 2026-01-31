@@ -1,48 +1,12 @@
-import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { mobileAPI } from '@/lib/api';
 
 export default function MobileApp() {
-  const { toast } = useToast();
-  const [apkUrl, setApkUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    mobileAPI.getDownloadUrl()
-      .then(data => {
-        if (data.success && data.downloadUrl) {
-          setApkUrl(data.downloadUrl);
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка загрузки APK URL:', error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
   const handleDownloadAPK = () => {
-    if (!apkUrl) {
-      toast({
-        title: "Ошибка",
-        description: "APK файл еще не загружен. Обратитесь к администратору.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    // Открываем в новой вкладке для скачивания
-    window.open(apkUrl, '_blank');
-    
-    toast({
-      title: "Скачивание началось",
-      description: "Приложение скачивается на ваше устройство",
-    });
+    // TODO: После сборки APK добавить ссылку на скачивание
+    alert('APK-файл будет доступен после сборки приложения через Expo');
   };
 
   return (
@@ -98,39 +62,56 @@ export default function MobileApp() {
             </div>
           </div>
 
-          {/* Кнопка скачивания */}
-          <div className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl shadow-lg p-8 mb-8 text-white text-center">
-            <Icon name="Download" size={48} className="mx-auto mb-4" />
-            <h2 className="text-3xl font-bold mb-4">
-              Скачать приложение
+          {/* Как установить */}
+          <div className="bg-white rounded-2xl shadow-sm border p-8 mb-8">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <Icon name="Download" size={28} className="text-primary" />
+              Как установить приложение
             </h2>
-            <p className="text-white/90 mb-6 max-w-xl mx-auto">
-              Готовое мобильное приложение для Android. 
-              Нажмите кнопку и установите APK на ваш телефон!
-            </p>
-            <Button 
-              size="lg" 
-              onClick={handleDownloadAPK}
-              className="bg-white text-primary hover:bg-gray-100 gap-2"
-              disabled={isLoading || !apkUrl}
-            >
-              {isLoading ? (
-                <>
-                  <Icon name="Loader2" size={20} className="animate-spin" />
-                  Загрузка...
-                </>
-              ) : apkUrl ? (
-                <>
-                  <Icon name="Download" size={20} />
-                  Скачать приложение
-                </>
-              ) : (
-                <>
-                  <Icon name="AlertCircle" size={20} />
-                  Приложение недоступно
-                </>
-              )}
-            </Button>
+
+            <div className="space-y-6">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  1
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Скачайте APK-файл</h3>
+                  <p className="text-gray-600 mb-3">
+                    Нажмите кнопку ниже и сохраните файл приложения на телефон
+                  </p>
+                  <Button onClick={handleDownloadAPK} className="gap-2">
+                    <Icon name="Download" size={20} />
+                    Скачать APK (Android)
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  2
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Разрешите установку</h3>
+                  <p className="text-gray-600">
+                    В настройках Android включите установку из неизвестных источников 
+                    (Настройки → Безопасность → Неизвестные источники)
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                  3
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Активируйте через личный кабинет</h3>
+                  <p className="text-gray-600 mb-3">
+                    После установки войдите в <a href="/dashboard" className="text-primary hover:underline">личный кабинет</a> на 
+                    сайте, получите код активации и введите его в приложении
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Системные требования */}
@@ -159,36 +140,8 @@ export default function MobileApp() {
             </ul>
           </div>
 
-          {/* Инструкция по сборке для разработчиков */}
-          <div className="mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl">
-            <div className="flex items-start gap-3">
-              <Icon name="Code2" size={24} className="text-gray-700 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-2">📖 Для разработчиков</h3>
-                <p className="text-gray-700 mb-3">
-                  Исходный код React Native приложения находится в папке <code className="bg-white px-2 py-1 rounded text-sm">mobile-app/</code>
-                </p>
-                <div className="flex gap-2 flex-wrap">
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                      <Icon name="Github" size={16} className="mr-2" />
-                      GitHub
-                    </a>
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => {
-                    navigator.clipboard.writeText('cd mobile-app && npm install && cd android && ./gradlew assembleRelease');
-                    toast({ title: 'Команда скопирована' });
-                  }}>
-                    <Icon name="Terminal" size={16} className="mr-2" />
-                    Собрать APK
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Версия iOS */}
-          <div className="mt-4 p-6 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl">
             <div className="flex items-start gap-3">
               <Icon name="Info" size={24} className="text-blue-600 flex-shrink-0 mt-1" />
               <div>

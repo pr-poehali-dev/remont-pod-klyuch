@@ -1,16 +1,24 @@
 {
   "tests": [
     {
-      "name": "OPTIONS request for CORS",
-      "method": "OPTIONS",
+      "name": "Get tasks without auth",
+      "method": "GET",
       "path": "/",
-      "expectedStatus": 200,
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "Unauthorized"
+      },
       "bodyMatcher": "partial"
     },
     {
-      "name": "GET without auth returns 401",
-      "method": "GET",
+      "name": "Create task without auth",
+      "method": "POST",
       "path": "/",
+      "body": {
+        "task_type": "invoice",
+        "title": "Test task",
+        "priority": "medium"
+      },
       "expectedStatus": 401,
       "expectedBody": {
         "error": "Unauthorized"
