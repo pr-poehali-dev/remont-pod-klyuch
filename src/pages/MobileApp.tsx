@@ -240,7 +240,17 @@ const MobileApp = () => {
 
           <TabsContent value="notifications" className="space-y-4">
             <Card className="p-6">
-              <h2 className="text-xl font-bold mb-4">Уведомления и отчеты</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Уведомления и отчеты</h2>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate('/notification-settings')}
+                >
+                  <Icon name="Settings" size={16} className="mr-1" />
+                  Настройки
+                </Button>
+              </div>
               
               <div className="space-y-3">
                 {[
