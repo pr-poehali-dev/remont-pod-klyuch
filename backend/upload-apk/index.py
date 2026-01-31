@@ -2,6 +2,7 @@ import json
 import os
 import boto3
 import base64
+import psycopg2
 
 def handler(event: dict, context) -> dict:
     '''API для загрузки APK-файла в облачное хранилище через браузер'''
@@ -12,11 +13,65 @@ def handler(event: dict, context) -> dict:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type'
             },
             'body': ''
         }
+
+    # GET запрос - вернуть текущий URL APK
+    if method == 'GET':
+        try:
+            conn = psycopg2.connect(os.environ['DATABASE_URL'])
+            cur = conn.cursor()
+            
+            cur.execute("""
+                SELECT download_url, file_name 
+                FROM t_p37682378_remont_pod_klyuch.mobile_apk_versions 
+                WHERE is_active = true 
+                ORDER BY uploaded_at DESC 
+                LIMIT 1
+            """)
+            
+            result = cur.fetchone()
+            cur.close()
+            conn.close()
+            
+            if result:
+                return {
+                    'statusCode': 200,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({
+                        'success': True,
+                        'downloadUrl': result[0],
+                        'fileName': result[1]
+                    })
+                }
+            else:
+                return {
+                    'statusCode': 404,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({
+                        'success': False,
+                        'error': 'APK файл еще не загружен'
+                    })
+                }
+                
+        except Exception as e:
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                'body': json.dumps({'error': f'Ошибка БД: {str(e)}'})
+            }
 
     if method == 'POST':
         body_str = event.get('body', '{}')
@@ -58,6 +113,28 @@ def handler(event: dict, context) -> dict:
             
             # Формируем публичную ссылку
             cdn_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{apk_key}"
+            
+            # Сохраняем в базу данных
+            conn = psycopg2.connect(os.environ['DATABASE_URL'])
+            cur = conn.cursor()
+            
+            # Деактивируем предыдущие версии
+            cur.execute("""
+                UPDATE t_p37682378_remont_pod_klyuch.mobile_apk_versions 
+                SET is_active = false 
+                WHERE is_active = true
+            """)
+            
+            # Добавляем новую версию
+            cur.execute("""
+                INSERT INTO t_p37682378_remont_pod_klyuch.mobile_apk_versions 
+                (file_name, download_url, is_active) 
+                VALUES (%s, %s, %s)
+            """, (file_name, cdn_url, True))
+            
+            conn.commit()
+            cur.close()
+            conn.close()
             
             return {
                 'statusCode': 200,

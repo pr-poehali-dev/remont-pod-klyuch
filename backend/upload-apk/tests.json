@@ -9,6 +9,16 @@
       "bodyMatcher": "exact"
     },
     {
+      "name": "Test GET current APK",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 404,
+      "expectedBody": {
+        "success": false
+      },
+      "bodyMatcher": "partial"
+    },
+    {
       "name": "Test POST without file",
       "method": "POST",
       "path": "/",
