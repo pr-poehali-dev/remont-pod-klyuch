@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,6 +9,44 @@ import { toast } from 'sonner';
 
 const AppDownload = () => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallPWA = async () => {
+    if (!deferredPrompt) {
+      toast.error('Установка недоступна в этом браузере');
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      toast.success('Приложение установлено!');
+      setIsInstalled(true);
+    } else {
+      toast.info('Установка отменена');
+    }
+    
+    setDeferredPrompt(null);
+  };
 
   const handleDownloadAPK = () => {
     setIsDownloading(true);
@@ -54,10 +92,10 @@ const AppDownload = () => {
   ];
 
   const systemRequirements = [
-    { label: 'Операционная система', value: 'Android 6.0 и выше' },
-    { label: 'Свободное место', value: 'Минимум 50 МБ' },
-    { label: 'Интернет', value: 'Требуется для работы' },
-    { label: 'Версия', value: '1.0.0 (beta)' }
+    { label: 'PWA - Android', value: 'Chrome 67+' },
+    { label: 'PWA - iOS', value: 'Safari 11.3+' },
+    { label: 'APK - Android', value: 'Android 6.0+' },
+    { label: 'Интернет', value: 'Обязателен' }
   ];
 
   return (
@@ -82,11 +120,71 @@ const AppDownload = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
               <Card className="border-2 border-primary">
                 <CardContent className="p-8 text-center space-y-6">
-                  <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                  <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                     <Icon name="Smartphone" size={48} className="text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold mb-2">Android</h2>
+                    <h2 className="text-2xl font-bold mb-2">Web-приложение (PWA)</h2>
+                    <p className="text-muted-foreground mb-6">
+                      Работает на всех устройствах: Android, iOS, Windows, Mac
+                    </p>
+                  </div>
+                  {isInstalled ? (
+                    <div className="space-y-4">
+                      <Badge className="bg-green-600 text-white px-4 py-2 text-base">
+                        <Icon name="CheckCircle" size={18} className="mr-2" />
+                        Приложение установлено
+                      </Badge>
+                      <Button 
+                        size="lg" 
+                        className="w-full"
+                        asChild
+                      >
+                        <a href="/mobile-login">
+                          <Icon name="LogIn" size={20} className="mr-2" />
+                          Открыть приложение
+                        </a>
+                      </Button>
+                    </div>
+                  ) : deferredPrompt ? (
+                    <Button 
+                      size="lg" 
+                      className="w-full"
+                      onClick={handleInstallPWA}
+                    >
+                      <Icon name="Download" size={20} className="mr-2" />
+                      Установить приложение
+                    </Button>
+                  ) : (
+                    <div className="space-y-4">
+                      <Button 
+                        size="lg" 
+                        className="w-full"
+                        asChild
+                      >
+                        <a href="/mobile-login">
+                          <Icon name="ExternalLink" size={20} className="mr-2" />
+                          Открыть в браузере
+                        </a>
+                      </Button>
+                      <p className="text-xs text-muted-foreground">
+                        Для установки откройте в Chrome/Safari на мобильном
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Версия 1.0.0 (PWA) • Без загрузки
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-green-500">
+                <CardContent className="p-8 text-center space-y-6">
+                  <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                    <Icon name="Download" size={48} className="text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold mb-2">Android APK</h2>
                     <p className="text-muted-foreground mb-6">
                       Скачайте APK-файл для установки на Android устройство
                     </p>
@@ -115,51 +213,48 @@ const AppDownload = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-2">
-                <CardContent className="p-8 text-center space-y-6">
-                  <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
-                    <Icon name="Apple" size={48} className="text-white" />
+
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+              <Card className="bg-blue-50 border-blue-200">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <Icon name="Smartphone" size={24} className="text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-2">Установка PWA (Chrome/Safari)</h3>
+                      <ol className="space-y-2 text-sm text-muted-foreground">
+                        <li>1. Откройте сайт в Chrome (Android) или Safari (iOS)</li>
+                        <li>2. Нажмите меню браузера (⋮ или 🔗)</li>
+                        <li>3. Выберите "Добавить на главный экран"</li>
+                        <li>4. Приложение появится на экране как нативное</li>
+                      </ol>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-2">iOS</h2>
-                    <p className="text-muted-foreground mb-6">
-                      Версия для iPhone и iPad в разработке
-                    </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-green-50 border-green-200">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <Icon name="Download" size={24} className="text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-2">Установка APK (Android)</h3>
+                      <ol className="space-y-2 text-sm text-muted-foreground">
+                        <li>1. Скачайте APK-файл на устройство</li>
+                        <li>2. Разрешите установку из неизвестных источников</li>
+                        <li>3. Откройте файл и следуйте инструкциям</li>
+                        <li>4. Войдите по телефону и СМС-коду</li>
+                      </ol>
+                    </div>
                   </div>
-                  <Button 
-                    size="lg" 
-                    className="w-full"
-                    variant="outline"
-                    disabled
-                  >
-                    <Icon name="Clock" size={20} className="mr-2" />
-                    Скоро
-                  </Button>
-                  <p className="text-xs text-muted-foreground">
-                    Ожидайте в 2026 году
-                  </p>
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="mb-12 bg-blue-50 border-blue-200">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <Icon name="Info" size={24} className="text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-2">Инструкция по установке APK</h3>
-                    <ol className="space-y-2 text-sm text-muted-foreground">
-                      <li>1. Скачайте APK-файл на Android устройство</li>
-                      <li>2. В настройках разрешите установку из неизвестных источников</li>
-                      <li>3. Откройте загруженный файл и следуйте инструкциям установщика</li>
-                      <li>4. После установки войдите используя телефон и СМС-код от администратора</li>
-                    </ol>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
             <div className="mb-12">
               <h2 className="text-3xl font-bold mb-8 text-center">Возможности приложения</h2>

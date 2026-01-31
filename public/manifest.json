@@ -1,12 +1,12 @@
 {
-  "name": "БухКонтроль",
+  "name": "БухКонтроль - Мобильное приложение",
   "short_name": "БухКонтроль",
-  "description": "Бухгалтерский контроль и аутсорсинг для бизнеса",
-  "start_url": "/",
+  "description": "Управляйте бухгалтерией вашего бизнеса прямо со смартфона",
+  "start_url": "/mobile-app",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0ea5e9",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -25,5 +25,17 @@
   "lang": "ru",
   "dir": "ltr",
   "scope": "/",
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Сканер документов",
+      "url": "/mobile-app?tab=scanner",
+      "description": "Быстро отсканировать документ"
+    },
+    {
+      "name": "ИИ-помощник",
+      "url": "/mobile-app?tab=ai-chat",
+      "description": "Задать вопрос бухгалтеру"
+    }
+  ]
 }
