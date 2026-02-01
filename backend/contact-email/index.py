@@ -70,7 +70,7 @@ def handler(event: dict, context) -> dict:
         if city:
             text_message += f"🌍 <b>Город:</b> {city}\n"
         
-        text_message += f"\n💬 <b>Сообщение:</b>\n{message}"
+        text_message += f"\n💬 <b>Сообщение:</b>\n{message}\n"
 
         response = requests.post(
             f'https://api.telegram.org/bot{bot_token}/sendMessage',
