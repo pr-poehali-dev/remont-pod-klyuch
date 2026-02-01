@@ -4,7 +4,7 @@ import requests
 
 
 def handler(event: dict, context) -> dict:
-    '''Отправка заявок с контактной формы на email zakaz6377@yandex.ru'''
+    '''Отправка заявок через Telegram Bot на zakaz6377@yandex.ru'''
     method = event.get('httpMethod', 'POST')
 
     if method == 'OPTIONS':
@@ -43,89 +43,41 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'error': 'Заполните обязательные поля: имя, email, сообщение'})
             }
 
-        api_key = os.environ.get('UNISENDER_API_KEY')
-        sender_email = os.environ.get('UNISENDER_SENDER_EMAIL')
-        sender_name = os.environ.get('UNISENDER_SENDER_NAME', 'БухКонтроль')
+        bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        chat_id = os.environ.get('TELEGRAM_ADMIN_CHAT_ID')
         
-        if not api_key or not sender_email:
+        if not bot_token or not chat_id:
             return {
                 'statusCode': 500,
                 'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps({'error': 'Email настройки не сконфигурированы'})
+                'body': json.dumps({'error': 'Telegram настройки не сконфигурированы'})
             }
 
-        subject = f'Новая заявка с сайта БухКонтроль'
+        subject = '🔔 Новая заявка с сайта БухКонтроль'
         if form_type == 'calculator':
-            subject = f'Расчёт стоимости услуг от {name}'
+            subject = '💰 Расчёт стоимости услуг'
         
-        html_body = f'''
-        <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2 style="color: #4F46E5;">Новая заявка с сайта</h2>
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                    <td style="padding: 8px; background: #f3f4f6; font-weight: bold;">Имя:</td>
-                    <td style="padding: 8px;">{name}</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; background: #f3f4f6; font-weight: bold;">Email:</td>
-                    <td style="padding: 8px;">{email}</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; background: #f3f4f6; font-weight: bold;">Телефон:</td>
-                    <td style="padding: 8px;">{phone if phone else 'Не указан'}</td>
-                </tr>
-        '''
+        text_message = f"{subject}\n\n"
+        text_message += f"👤 <b>Имя:</b> {name}\n"
+        text_message += f"📧 <b>Email:</b> {email}\n"
+        
+        if phone:
+            text_message += f"📱 <b>Телефон:</b> {phone}\n"
         
         if company:
-            html_body += f'''
-                <tr>
-                    <td style="padding: 8px; background: #f3f4f6; font-weight: bold;">Компания:</td>
-                    <td style="padding: 8px;">{company}</td>
-                </tr>
-            '''
+            text_message += f"🏢 <b>Компания:</b> {company}\n"
         
         if city:
-            html_body += f'''
-                <tr>
-                    <td style="padding: 8px; background: #f3f4f6; font-weight: bold;">Город:</td>
-                    <td style="padding: 8px;">{city}</td>
-                </tr>
-            '''
+            text_message += f"🌍 <b>Город:</b> {city}\n"
         
-        html_body += f'''
-                <tr>
-                    <td style="padding: 8px; background: #f3f4f6; font-weight: bold;">Сообщение:</td>
-                    <td style="padding: 8px;">{message.replace(chr(10), '<br>')}</td>
-                </tr>
-            </table>
-            <br>
-            <p style="color: #6B7280; font-size: 12px;">Заявка получена с сайта БухКонтроль</p>
-        </body>
-        </html>
-        '''
+        text_message += f"\n💬 <b>Сообщение:</b>\n{message}"
 
         response = requests.post(
-            'https://go1.unisender.ru/ru/transactional/api/v1/email/send.json',
-            headers={
-                'X-API-KEY': api_key,
-                'Content-Type': 'application/json'
-            },
+            f'https://api.telegram.org/bot{bot_token}/sendMessage',
             json={
-                'message': {
-                    'recipients': [
-                        {
-                            'email': 'zakaz6377@yandex.ru'
-                        }
-                    ],
-                    'body': {
-                        'html': html_body
-                    },
-                    'subject': subject,
-                    'from_email': sender_email,
-                    'from_name': sender_name,
-                    'reply_to': email
-                }
+                'chat_id': chat_id,
+                'text': text_message,
+                'parse_mode': 'HTML'
             },
             timeout=10
         )
@@ -134,7 +86,7 @@ def handler(event: dict, context) -> dict:
             return {
                 'statusCode': 500,
                 'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps({'error': 'Ошибка отправки письма', 'details': response.text})
+                'body': json.dumps({'error': 'Ошибка отправки в Telegram', 'details': response.text})
             }
 
         return {
