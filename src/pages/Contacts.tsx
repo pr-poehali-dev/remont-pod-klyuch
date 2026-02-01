@@ -15,17 +15,52 @@ const Contacts = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) {
       toast.error('Заполните все обязательные поля');
       return;
     }
-    toast.success('Спасибо! Мы свяжемся с вами в ближайшее время');
-    setName('');
-    setEmail('');
-    setPhone('');
-    setMessage('');
+
+    try {
+      const response = await fetch('/backend/func2url.json');
+      const urls = await response.json();
+      const contactEmailUrl = urls['contact-email'];
+
+      if (!contactEmailUrl) {
+        toast.error('Функция отправки временно недоступна');
+        return;
+      }
+
+      const result = await fetch(contactEmailUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message,
+          formType: 'contact'
+        }),
+      });
+
+      const data = await result.json();
+
+      if (result.ok && data.success) {
+        toast.success('Спасибо! Мы свяжемся с вами в ближайшее время');
+        setName('');
+        setEmail('');
+        setPhone('');
+        setMessage('');
+      } else {
+        toast.error(data.error || 'Ошибка отправки заявки');
+      }
+    } catch (error) {
+      console.error('Error sending form:', error);
+      toast.error('Ошибка отправки заявки. Попробуйте позже');
+    }
   };
 
   const contactInfo = [

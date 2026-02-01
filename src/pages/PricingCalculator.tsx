@@ -53,17 +53,65 @@ const PricingCalculator = () => {
     setShowContactForm(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone || !email) {
       toast.error('Заполните все поля');
       return;
     }
-    toast.success('Спасибо! Мы свяжемся с вами в ближайшее время');
-    setName('');
-    setPhone('');
-    setEmail('');
-    setShowContactForm(false);
+
+    try {
+      const response = await fetch('/backend/func2url.json');
+      const urls = await response.json();
+      const contactEmailUrl = urls['contact-email'];
+
+      if (!contactEmailUrl) {
+        toast.error('Функция отправки временно недоступна');
+        return;
+      }
+
+      const calculationDetails = `
+Расчёт стоимости услуг:
+- Организационная форма: ${orgForm}
+- Система налогообложения: ${taxSystem}
+- Количество сотрудников: ${employees[0]}
+- Операций в месяц: ${operations[0]}
+- Платёжных поручений: ${payments[0]}
+- Расчётных счетов: ${banks[0]}
+- Консультации: ${consultations}
+
+Итоговая стоимость: ${price} руб/мес
+      `.trim();
+
+      const result = await fetch(contactEmailUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message: calculationDetails,
+          formType: 'calculator'
+        }),
+      });
+
+      const data = await result.json();
+
+      if (result.ok && data.success) {
+        toast.success('Спасибо! Мы свяжемся с вами в ближайшее время');
+        setName('');
+        setPhone('');
+        setEmail('');
+        setShowContactForm(false);
+      } else {
+        toast.error(data.error || 'Ошибка отправки заявки');
+      }
+    } catch (error) {
+      console.error('Error sending form:', error);
+      toast.error('Ошибка отправки заявки. Попробуйте позже');
+    }
   };
 
   return (
